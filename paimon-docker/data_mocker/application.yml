@@ -1,0 +1,90 @@
+# 外部配置打开
+logging.config: "/opt/module/data_mocker/logback.xml"
+#业务日期
+mock.date: "2023-06-20"
+
+  #模拟数据发送模式
+mock.type: "log"
+#mock.type: "http"
+#mock.type: "kafka"
+  #http模式下，发送的地址
+mock.url: "http://localhost:8090/applog"
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://mysql:3306/edu?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+      username: root
+      password: "mysql123457"
+      driver-class-name:  com.mysql.jdbc.Driver
+      max-active: 200
+      test-on-borrow: true
+
+mybatis-plus.global-config.db-config.field-strategy: not_null
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+
+mybatis:
+   mapper-locations: classpath:mapper/*.xml
+
+mock:
+  kafka-server: "kafka:9092"
+  kafka-topic: "ODS_BASE_LOG"
+
+
+# 清空业务数据
+mock.clear.busi: 0
+
+# 清空用户
+mock.clear.user: 0
+
+#是否初始化试卷
+mock.if-init-paper: 0
+
+# 生成新用户
+mock.new.user: 50
+  #启动次数
+mock.user-session.count: 1000
+  #设备最大值
+mock.max.mid: 1000
+
+mock.if-realtime: 0
+#访问时间分布权重
+mock.start-time-weight: "10:5:0:0:0:0:5:5:5:10:10:15:20:10:10:10:10:10:20:25:30:35:30:20"
+
+#支付类型占比 支付宝 ：微信 :银联
+mock.payment_type_weight: "40:50:10"
+  #课程最大值
+mock.max.course-id: 10
+  #页面平均访问时间
+mock.page.during-time-ms: 20000
+  #错误概率 百分比
+mock.error.rate: 3
+  #每条日志发送延迟 ms
+mock.log.sleep: 100
+  #课程详情来源  用户查询，商品推广，智能推荐, 促销活动
+mock.detail.source-type-rate: "40:25:15:20"
+
+
+
+#领取购物券概率
+mock.if_get_coupon_rate: 75
+
+#优惠券最大id
+mock.max.coupon-id: 3
+
+  #搜索关键词
+mock.search.keyword: "java,python,多线程,前端,数据库,大数据,hadoop,flink"
+
+  #男性比例
+mock.user.male-rate: 20
+  #用户数据变化概率
+mock.user.update-rate: 20
+
+
+# 男女浏览商品比重（35sku)
+mock.course-weight.male: "10:10:10:10:10:10:10:5:5:5:5:5:10:10:10:10:12:12:12:12:12:5:5:5:5:3:3:3:3:3:3:3:3:10:10"
+mock.course-weight.female: "1:1:1:1:1:1:1:5:5:5:5:5:1:1:1:1:2:2:2:2:2:8:8:8:8:15:15:15:15:15:15:15:15:1:1"
+
+

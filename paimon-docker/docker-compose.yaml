@@ -1,0 +1,552 @@
+version: "3.8"
+# version: "3.3"
+# version: "2.2"
+
+services:
+
+  jobmanager:
+    image: flink:1.14.6-scala_2.12
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    volumes:
+      - ./flink_libs:/opt/flink/lib
+      - ./state:/opt/flink/state
+      - ./jobs-archive:/opt/flink/jobs-archive
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        jobmanager.memory.process.size: 4096m
+        taskmanager.memory.process.size: 2048m
+        taskmanager.numberOfTaskSlots: 2
+        parallelism.default: 1
+        state.backend: rocksdb
+        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
+        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+        state.backend.incremental: true
+        execution.checkpointing.interval: 60000
+        taskmanager.network.blocking-shuffle.type: mmap
+        taskmanager.network.blocking-shuffle.compression.enabled: true
+        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+        cluster.evenly-spread-out-slots: true
+        heartbeat.timeout: 180000
+        akka.framesize: 251658240b
+        classloader.check-leaked-classloader: false
+
+  flink_cluster_tm1:
+    image: flink:1.14.6-scala_2.12
+    command: taskmanager
+    deploy:
+      resources:
+        limits:
+          cpus: "2.00"
+          memory: 2G
+        reservations:
+          memory: 128M
+    volumes:
+      - ./flink_libs:/opt/flink/lib
+      - ./state:/opt/flink/state
+      - ./jobs-archive:/opt/flink/jobs-archive
+    depends_on:
+      - jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        jobmanager.memory.process.size: 4096m
+        taskmanager.memory.process.size: 2048m
+        taskmanager.numberOfTaskSlots: 2
+        state.backend: rocksdb
+        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
+        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+        state.backend.incremental: true
+        execution.checkpointing.interval: 60000
+        taskmanager.network.blocking-shuffle.type: mmap
+        taskmanager.network.blocking-shuffle.compression.enabled: true
+        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+        cluster.evenly-spread-out-slots: true
+        heartbeat.timeout: 180000
+        akka.framesize: 251658240b
+        classloader.check-leaked-classloader: false
+
+  flink_cluster_tm2:
+    image: flink:1.14.6-scala_2.12
+    command: taskmanager
+    deploy:
+      resources:
+        limits:
+          cpus: "2.00"
+          memory: 2G
+        reservations:
+          memory: 128M
+    volumes:
+      - ./flink_libs:/opt/flink/lib
+      - ./state:/opt/flink/state
+      - ./jobs-archive:/opt/flink/jobs-archive
+    depends_on:
+      - jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        jobmanager.memory.process.size: 4096m
+        taskmanager.memory.process.size: 2048m
+        taskmanager.numberOfTaskSlots: 2
+        parallelism.default: 2
+        state.backend: rocksdb
+        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
+        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+        state.backend.incremental: true
+        execution.checkpointing.interval: 60000
+        taskmanager.network.blocking-shuffle.type: mmap
+        taskmanager.network.blocking-shuffle.compression.enabled: true
+        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+        cluster.evenly-spread-out-slots: true
+        heartbeat.timeout: 180000
+        akka.framesize: 251658240b
+        classloader.check-leaked-classloader: false
+
+  flink_cluster_tm3:
+    image: flink:1.14.6-scala_2.12
+    command: taskmanager
+    deploy:
+      resources:
+        limits:
+          cpus: "2.00"
+          memory: 2G
+        reservations:
+          memory: 128M
+    volumes:
+      - ./flink_libs:/opt/flink/lib
+      - ./state:/opt/flink/state
+      - ./jobs-archive:/opt/flink/jobs-archive
+    depends_on:
+      - jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        jobmanager.memory.process.size: 4096m
+        taskmanager.memory.process.size: 2048m
+        taskmanager.numberOfTaskSlots: 2
+        parallelism.default: 2
+        state.backend: rocksdb
+        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
+        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+        state.backend.incremental: true
+        execution.checkpointing.interval: 60000
+        taskmanager.network.blocking-shuffle.type: mmap
+        taskmanager.network.blocking-shuffle.compression.enabled: true
+        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+        cluster.evenly-spread-out-slots: true
+        heartbeat.timeout: 180000
+        akka.framesize: 251658240b
+        classloader.check-leaked-classloader: false
+
+  flink_cluster_tm4:
+    image: flink:1.14.6-scala_2.12
+    command: taskmanager
+    deploy:
+      resources:
+        limits:
+          cpus: "2.00"
+          memory: 2G
+        reservations:
+          memory: 128M
+    volumes:
+      - ./flink_libs:/opt/flink/lib
+      - ./state:/opt/flink/state
+      - ./jobs-archive:/opt/flink/jobs-archive
+    depends_on:
+      - jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        jobmanager.memory.process.size: 4096m
+        taskmanager.memory.process.size: 2048m
+        taskmanager.numberOfTaskSlots: 2
+        parallelism.default: 2
+        state.backend: rocksdb
+        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
+        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+        state.backend.incremental: true
+        execution.checkpointing.interval: 60000
+        taskmanager.network.blocking-shuffle.type: mmap
+        taskmanager.network.blocking-shuffle.compression.enabled: true
+        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+        cluster.evenly-spread-out-slots: true
+        heartbeat.timeout: 180000
+        akka.framesize: 251658240b
+        classloader.check-leaked-classloader: false
+
+  namenode:
+    image: heap/hudi-hadoop_2.10.1-namenode:latest
+  #    command: start-hadoop namenode
+    hostname: namenode
+    container_name: namenode
+    environment:
+      HDFS_USER: flink
+      CLUSTER_NAME: paimon-test
+    ports:
+      - "8020:8020"
+      - "50070:50070"
+      - "5005"
+    env_file:
+      - ./hadoop.env
+
+  datanode1:
+    image: heap/hudi-hadoop_2.10.1-datanode:latest
+  #  command: start-hadoop datanode namenode
+    hostname: datanode1
+    container_name: datanode1
+    deploy:
+      resources:
+        limits:
+          cpus: "2.00"
+          memory: 2G
+        reservations:
+          memory: 128M
+    environment:
+      HDFS_USER: flink
+      CLUSTER_NAME: paimon-test
+    links:
+      - namenode
+    env_file:
+      - ./hadoop.env
+    ports:
+      - "50010:50010"
+      - "50075:50075"
+      - "5005"
+
+  kafka:
+    image: bitnami/kafka:2.0.0
+    hostname: kafkabroker
+    container_name: kafkabroker
+    ports:
+      - "9092:9092"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.00"
+          memory: 2G
+        reservations:
+          memory: 128M
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS=0
+
+  kafkaeagle:
+    image: heap/kafka-eagle_3.0.1
+    hostname: kafkaeagle
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+        reservations:
+          memory: 128M
+    container_name: kafkaeagle
+    ports:
+      - "8048:8048"
+    depends_on:
+      - kafka
+    environment:
+      - EFAK_CLUSTER_ZK_LIST=zookeeper:2181
+
+  zookeeper:
+    image: bitnami/zookeeper:3.4.12-r68
+    hostname: zookeeper
+    container_name: zookeeper
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+        reservations:
+          memory: 128M
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+
+  zeppelin:
+    container_name: zeppelin
+    hostname: zeppelin
+    image: apache/zeppelin:0.10.1
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 1G
+        reservations:
+          memory: 128M
+    ports:
+      - "9091:8080"
+    volumes:
+      - ./zeppelin-logs:/logs
+      - ./zeppelin-notebook:/notebook
+      - ./flink-1.14.6:/opt/flink
+    environment:
+      ZEPPELIN_LOG_DIR: '/logs'
+      ZEPPELIN_NOTEBOOK_DIR: '/notebook'
+      FLINK_HOME: '/opt/flink'
+
+  mysql:
+    container_name: mysql
+    hostname: mysql
+    image: mysql:5.7
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 1G
+        reservations:
+          memory: 128M
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/conf:/etc/mysql/mysql.conf.d
+      - ./mysql/log:/var/log/
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql123457
+
+  datagen:
+    container_name: datagen
+    hostname: datagen
+    image: heap/datagen
+    volumes:
+      - ./data_mocker/application.yml:/opt/module/data_mocker/application.yml
+      - ./data_mocker/logback.xml:/opt/module/data_mocker/logback.xml
+      - ./data_mocker/path.json:/opt/module/data_mocker/path.json
+      - ./data_mocker/log:/opt/module/data_mocker/log
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+        reservations:
+          memory: 128M
+    depends_on:
+      - mysql
+
+
+  #  sql-client:
+  #    image: flink:1.14.6-scala_2.12
+  #    command: bin/sql-client.sh
+  #    volumes:
+  #      - ./flink_libs:/opt/flink/lib
+  #      - ./state:/opt/flink/state
+  #      - ./jobs-archive:/opt/flink/jobs-archive
+  #    depends_on:
+  #      - jobmanager
+  #    environment:
+  #      - |
+  #        FLINK_PROPERTIES=
+  #        jobmanager.rpc.address: jobmanager
+  #        jobmanager.memory.process.size: 4096m
+  #        taskmanager.memory.process.size: 2048m
+  #        taskmanager.numberOfTaskSlots: 4
+  #        parallelism.default: 4
+  #        state.backend: rocksdb
+  #        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
+  #        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+  #        state.backend.incremental: true
+  #        execution.checkpointing.interval: 60000
+  #        taskmanager.network.blocking-shuffle.type: mmap
+  #        taskmanager.network.blocking-shuffle.compression.enabled: true
+  #        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+  #        cluster.evenly-spread-out-slots: true
+  #        heartbeat.timeout: 180000
+  #        akka.framesize: 251658240b
+  #        classloader.check-leaked-classloader: false
+
+#  ck1:
+#    hostname: ck1
+#    container_name: ck1
+#    image: yandex/clickhouse-server:21.3.11.5
+#    ulimits:
+#      nofile:
+#        soft: 300001
+#        hard: 300002
+#    ports:
+#      - "9001:9000"
+#      - "9121:8123"
+#    volumes:
+#      - ./conf/metrika1.xml:/etc/metrika.xml
+#      - ./conf/config1.xml:/etc/clickhouse-server/config.xml
+#      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+#    depends_on:
+#      - zk1
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.00"
+#          memory: 512M
+#        reservations:
+#          memory: 128M
+#    environment:
+#      TZ: "Asia/Shanghai"
+#  ck2:
+#    hostname: ck2
+#    container_name: ck2
+#    image: yandex/clickhouse-server:21.3.11.5
+#    ulimits:
+#      nofile:
+#        soft: 300001
+#        hard: 300002
+#    ports:
+#      - "9002:9000"
+#      - "9122:8123"
+#    volumes:
+#      - ./conf/metrika2.xml:/etc/metrika.xml
+#      - ./conf/config2.xml:/etc/clickhouse-server/config.xml
+#      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+#    depends_on:
+#      - zk1
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.00"
+#          memory: 512M
+#        reservations:
+#          memory: 128M
+#    environment:
+#      TZ: "Asia/Shanghai"
+#  ck3:
+#    hostname: ck3
+#    container_name: ck3
+#    image: yandex/clickhouse-server:21.3.11.5
+#    ulimits:
+#      nofile:
+#        soft: 300001
+#        hard: 300002
+#    ports:
+#      - "9003:9000"
+#      - "9123:8123"
+#    volumes:
+#      - ./conf/metrika3.xml:/etc/metrika.xml
+#      - ./conf/config3.xml:/etc/clickhouse-server/config.xml
+#      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+#    depends_on:
+#      - zk1
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.00"
+#          memory: 512M
+#        reservations:
+#          memory: 128M
+#    environment:
+#      TZ: "Asia/Shanghai"
+#  ck4:
+#    hostname: ck4
+#    container_name: ck4
+#    image: yandex/clickhouse-server:21.3.11.5
+#    ulimits:
+#      nofile:
+#        soft: 300001
+#        hard: 300002
+#    ports:
+#      - "9004:9000"
+#      - "9124:8123"
+#    volumes:
+#      - ./conf/metrika4.xml:/etc/metrika.xml
+#      - ./conf/config4.xml:/etc/clickhouse-server/config.xml
+#      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+#    depends_on:
+#      - zk1
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.00"
+#          memory: 512M
+#        reservations:
+#          memory: 128M
+#    environment:
+#      TZ: "Asia/Shanghai"
+#  ck5:
+#    hostname: ck5
+#    container_name: ck5
+#    image: yandex/clickhouse-server:21.3.11.5
+#    ulimits:
+#      nofile:
+#        soft: 300001
+#        hard: 300002
+#    ports:
+#      - "9005:9000"
+#      - "9125:8123"
+#    volumes:
+#      - ./conf/metrika5.xml:/etc/metrika.xml
+#      - ./conf/config5.xml:/etc/clickhouse-server/config.xml
+#      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+#    depends_on:
+#      - zk1
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.00"
+#          memory: 512M
+#        reservations:
+#          memory: 128M
+#    environment:
+#      TZ: "Asia/Shanghai"
+#  ck6:
+#    hostname: ck6
+#    container_name: ck6
+#    image: yandex/clickhouse-server:21.3.11.5
+#    ulimits:
+#      nofile:
+#        soft: 300001
+#        hard: 300002
+#    ports:
+#      - "9006:9000"
+#      - "9126:8123"
+#    volumes:
+#      - ./conf/metrika6.xml:/etc/metrika.xml
+#      - ./conf/config6.xml:/etc/clickhouse-server/config.xml
+#      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+#    depends_on:
+#      - zk1
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.00"
+#          memory: 512M
+#        reservations:
+#          memory: 128M
+#    environment:
+#      TZ: "Asia/Shanghai"
+#  index_store:
+#    hostname: index_store
+#    container_name: index_store
+#    image: yandex/clickhouse-server:21.3.11.5
+#    ulimits:
+#      nofile:
+#        soft: 300001
+#        hard: 300002
+#    ports:
+#      - "9007:9000"
+#      - "9127:8123"
+#    volumes:
+#      - ./conf/metrika_index.xml:/etc/metrika.xml
+#      - ./conf/config_index.xml:/etc/clickhouse-server/config.xml
+#      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+#    depends_on:
+#      - zk1
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.00"
+#          memory: 512M
+#        reservations:
+#          memory: 128M
+#    environment:
+#      TZ: "Asia/Shanghai"

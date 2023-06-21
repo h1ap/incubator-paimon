@@ -1,0 +1,16 @@
+{ "visit_path" : [
+  {"path":["start_app","home","course_list","course_detail" ,"order","payment" ,"end" ],"rate":20},
+  {"path":["start_app","home","course_list","course_detail" ,"order" ,"end" ],"rate":20},
+  {"path":["start_app","home","course_list","course_detail" ,"course_list","course_detail" ,"order" ,"end" ],"rate":20},
+  {"path":["start_app","home","course_list","course_detail","cart" ,"order" ,"payment" ,"end" ],"rate":20}
+],
+
+  "study_path": [
+    {"path":["start_app","mine","course_detail","chapter_video","end" ],"rate":10},
+    {"path":["start_app","mine","course_detail","exam","end" ],"rate":10}
+  ]
+
+}
+
+
+

@@ -1,0 +1,25 @@
+[mysqld]
+#binlog格式
+binlog_format=ROW
+#存放地址，注意这个地址是docker容器里面的地址，不是宿主机里面的地址
+log-bin=/var/lib/mysql/mysql-bin
+server-id=123457
+#存放时间
+expire_logs_days=7
+#最大文件大小
+max_binlog_size=50m
+#缓存大小
+binlog_cache_size=10m
+#最大缓存大小
+max_binlog_cache_size=512m
+[mysql]
+default-character-set=utf8mb4
+[mysql.server]
+default-character-set=utf8mb4
+[mysqld_safe]
+default-character-set=utf8mb4
+[client]
+default-character-set=utf8mb4
+[mysqld]
+character_set_server = utf8mb4
+init_connect='SET NAMES utf8mb4'

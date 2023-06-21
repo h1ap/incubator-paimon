@@ -1,0 +1,81 @@
+<yandex>
+  <clickhouse_remote_servers>
+    <cluser_practice>
+      <shard>
+        <internal_replication>true</internal_replication>
+        <replica>
+          <host>ck1</host>
+          <port>9000</port>
+          <!-- <user>default</user>
+          <password>sjz123457!</password> -->
+        </replica>
+      </shard>
+      <shard>
+        <internal_replication>true</internal_replication>
+        <replica>
+          <host>ck2</host>
+          <port>9000</port>
+          <!-- <user>default</user>
+          <password>sjz123457!</password> -->
+        </replica>
+      </shard>
+      <shard>
+        <internal_replication>true</internal_replication>
+        <replica>
+          <host>ck3</host>
+          <port>9000</port>
+          <!-- <user>default</user>
+          <password>sjz123457!</password> -->
+        </replica>
+      </shard>
+      <shard>
+        <internal_replication>true</internal_replication>
+        <replica>
+          <host>ck4</host>
+          <port>9000</port>
+          <!-- <user>default</user>
+          <password>sjz123457!</password> -->
+        </replica>
+      </shard>
+      <shard>
+        <internal_replication>true</internal_replication>
+        <replica>
+          <host>ck5</host>
+          <port>9000</port>
+          <!-- <user>default</user>
+          <password>sjz123457!</password> -->
+        </replica>
+      </shard>
+      <shard>
+        <internal_replication>true</internal_replication>
+        <replica>
+          <host>ck6</host>
+          <port>9000</port>
+          <!-- <user>default</user>
+          <password>sjz123457!</password> -->
+        </replica>
+      </shard>
+      <shard>
+        <internal_replication>true</internal_replication>
+        <replica>
+          <host>index_store</host>
+          <port>9000</port>
+          <!-- <user>default</user>
+          <password>sjz123457!</password> -->
+        </replica>
+      </shard>
+    </cluser_practice>
+  </clickhouse_remote_servers>
+
+  <zookeeper-servers>
+    <node index="1">
+      <host>zk1</host>
+      <port>2181</port>
+    </node>
+  </zookeeper-servers>
+
+  <macros>
+    <shard>6</shard>
+    <replica>1</replica>
+  </macros>
+</yandex>
