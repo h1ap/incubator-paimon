@@ -1,7 +1,10 @@
 rm -rf ./data_mocker/log/*.log
+echo "remove app log..."
 
 date_str=$(date +%Y-%m-%d)
 gsed -i "s/[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/$date_str/g" ./data_mocker/application.yml
+
+echo "start paimon-docker env..."
 docker-compose up -d
 sleep 5s
 

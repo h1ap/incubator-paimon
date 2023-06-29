@@ -1,7 +1,7 @@
 # 外部配置打开
 logging.config: "/opt/module/data_mocker/logback.xml"
 #业务日期
-mock.date: "2023-06-22"
+mock.date: "2023-06-23"
 
   #模拟数据发送模式
 mock.type: "log"
