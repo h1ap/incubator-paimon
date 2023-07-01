@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "%flink.conf\n\nFLINK_HOME /opt/flink\nflink.execution.mode remote\nflink.execution.remote.host\tjobmanager\nflink.execution.remote.port 8081\nexecution.checkpointing.interval 30000\nstate.backend rocksdb\nstate.checkpoints.dir hdfs://namenode:8020/flink-checkpoints\nstate.savepoints.dir hdfs://namenode:8020/flink-savepoints\nstate.backend.incremental true\ntaskmanager.network.blocking-shuffle.type mmap\ntaskmanager.network.blocking-shuffle.compression.enabled true\njobmanager.archive.fs.dir hdfs://completed-jobs\ncluster.evenly-spread-out-slots true\nheartbeat.timeout 180000\nakka.framesize 251658240b\nclassloader.check-leaked-classloader false",
+      "text": "%flink.conf\n# 需要将每个note资源设置隔离\nFLINK_HOME /opt/flink\nflink.execution.mode remote\nflink.execution.remote.host\tjobmanager\nflink.execution.remote.port 8081\nexecution.checkpointing.interval 30000\nstate.backend rocksdb\nstate.checkpoints.dir hdfs://namenode:8020/flink-checkpoints\nstate.savepoints.dir hdfs://namenode:8020/flink-savepoints\nstate.backend.incremental true\ntaskmanager.network.blocking-shuffle.type mmap\ntaskmanager.network.blocking-shuffle.compression.enabled true\njobmanager.archive.fs.dir hdfs://completed-jobs\ncluster.evenly-spread-out-slots true\nheartbeat.timeout 180000\nakka.framesize 251658240b\nclassloader.check-leaked-classloader false",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:22:43.875",
+      "dateUpdated": "2023-06-29 12:03:42.941",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -32,8 +32,8 @@
       "jobName": "paragraph_1687337579736_248171164",
       "id": "paragraph_1687337579736_248171164",
       "dateCreated": "2023-06-21 08:52:59.736",
-      "dateStarted": "2023-06-29 06:22:43.884",
-      "dateFinished": "2023-06-29 06:22:43.885",
+      "dateStarted": "2023-06-29 12:03:42.947",
+      "dateFinished": "2023-06-29 12:03:42.952",
       "status": "FINISHED"
     },
     {

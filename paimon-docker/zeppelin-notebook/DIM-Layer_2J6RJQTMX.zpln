@@ -1,0 +1,875 @@
+{
+  "paragraphs": [
+    {
+      "text": "%flink.conf\n# 需要将每个note资源设置隔离\nFLINK_HOME /opt/flink\nflink.execution.mode remote\nflink.execution.remote.host\tjobmanager\nflink.execution.remote.port 8081\ntaskmanager.network.blocking-shuffle.type mmap\ntaskmanager.network.blocking-shuffle.compression.enabled true\njobmanager.archive.fs.dir hdfs://completed-jobs\ncluster.evenly-spread-out-slots true\nheartbeat.timeout 180000\nakka.framesize 251658240b\nclassloader.check-leaked-classloader false",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 12:03:51.934",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688021960104_2059002435",
+      "id": "paragraph_1687337579736_248171164",
+      "dateCreated": "2023-06-29 06:59:20.104",
+      "dateStarted": "2023-06-29 12:03:51.938",
+      "dateFinished": "2023-06-29 12:03:51.940",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%file\nls /",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 06:59:20.104",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/undefined",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "No such File or directory"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688021960104_157757678",
+      "id": "paragraph_1687870830714_226176832",
+      "dateCreated": "2023-06-29 06:59:20.104",
+      "status": "READY"
+    },
+    {
+      "text": "%flink.bsql\n-- hdfs://hdfs-master:9000/hudi/flink_stream_write\ndrop catalog if exists paimon_catelog;\ncreate catalog paimon_catelog with (\n    \u0027type\u0027\u003d\u0027paimon\u0027,\n    \u0027warehouse\u0027\u003d\u0027hdfs://namenode:8020/paimon_datalake\u0027\n);\nuse CATALOG paimon_catelog;",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 09:40:50.991",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {
+          "bdtMeta": {
+            "inlay": {
+              "collapsed": true
+            }
+          }
+        },
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Catalog has been dropped.\nCatalog has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688021960104_288402693",
+      "id": "paragraph_1687338800195_1149780972",
+      "dateCreated": "2023-06-29 06:59:20.104",
+      "dateStarted": "2023-06-29 07:05:35.739",
+      "dateFinished": "2023-06-29 07:05:44.796",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer 9 tables",
+      "text": "%md\ndim_chapter \ndim_course\n",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 11:44:41.970",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003edim_chapter\u003cbr /\u003e\ndim_course\u003c/p\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688021960104_1790746216",
+      "id": "paragraph_1687339736164_1259470490",
+      "dateCreated": "2023-06-29 06:59:20.104",
+      "dateStarted": "2023-06-29 11:44:41.971",
+      "dateFinished": "2023-06-29 11:44:43.964",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_chapter)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_chapter)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_chapter;\nCREATE TABLE if not exists dim_chapter (\n     id           bigint not null comment \u0027编号\u0027,\n    chapter_name varchar(200) null comment \u0027章节名称\u0027,\n    course_id    bigint       null comment \u0027课程id\u0027,\n    video_id     bigint       null comment \u0027视频id\u0027,\n    publisher_id bigint       null comment \u0027发布者id\u0027,\n    is_free      varchar(2)   null comment \u0027是否免费\u0027,\n    create_time  timestamp     null comment \u0027创建时间\u0027,\n    update_time  timestamp     null comment \u0027更新时间\u0027,\n     dt string null comment \u0027分区时间\u0027,\n     primary key(id, dt) not enforced\n) COMMENT \u0027章节维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\ninsert into dim_chapter\nselect id, chapter_name, course_id, video_id, publisher_id, is_free, create_time,\n                          update_time, dt\nfrom ods_pm_chapter_info\nwhere dt \u003d (select max(dt) from ods_pm_chapter_info)",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 11:45:01.648",
+      "progress": 0,
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nInsertion successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/450b98e6b7ced04de06126e6bbbba945"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688031651203_1933583799",
+      "id": "paragraph_1688031651203_1933583799",
+      "dateCreated": "2023-06-29 09:40:51.203",
+      "dateStarted": "2023-06-29 11:21:06.824",
+      "dateFinished": "2023-06-29 11:21:10.849",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_course)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_course)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_course;\nCREATE TABLE if not exists dim_course\n(\n    `id`               bigint COMMENT \u0027编号\u0027,\n    `course_name`      STRING COMMENT \u0027课程名称\u0027,\n    `subject_id`       bigint COMMENT \u0027学科id\u0027,\n    `subject_name`     STRING COMMENT \u0027学科名称\u0027,\n    `category_id`      bigint COMMENT \u0027分类id\u0027,\n    `category_name`    STRING COMMENT \u0027分类名称\u0027,\n    `teacher`          STRING COMMENT \u0027讲师名称\u0027,\n    `publisher_id`     bigint COMMENT \u0027发布者id\u0027,\n    `chapter_num`      bigint COMMENT \u0027章节数\u0027,\n    `origin_price`     decimal(16, 2) COMMENT \u0027价格\u0027,\n    `reduce_amount`    decimal(16, 2) COMMENT \u0027优惠金额\u0027,\n    `actual_price`     decimal(16, 2) COMMENT \u0027实际价格\u0027,\n    `create_time`      timestamp COMMENT \u0027创建时间\u0027,\n    `update_time`      timestamp COMMENT \u0027更新时间\u0027,\n    `chapters`       multiset\u003crow\u003cchapter_id bigint,chapter_name STRING, video_id bigint, is_free STRING\u003e\u003e COMMENT \u0027章节\u0027,\n     dt string null comment \u0027分区时间\u0027,\n     primary key(id, dt) not enforced\n) COMMENT \u0027课程维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\n-- 1. 确定主维表，由口径一一对应原则和最细粒度原则，选择ods_pm_course_info作为主维表\n-- 2. 确定维度属性\n-- 2.1 尽可能生成丰富的纬度属性\n-- 2.2 尽量不使用编码，而使用明确的文字说明，一般可以编码和文字共存\n-- 2.3 尽量沉淀出通用的维度属性\ninsert into dim_course\nselect *\nfrom (with opbci as\n         (\n             select id, category_name\n                 from ods_pm_base_category_info\n             where deleted \u003d \u00270\u0027\n               and dt \u003d (select max(dt) from ods_pm_base_category_info)\n         ),\n     opbsi as\n         (\n             select id, subject_name, category_id\n                 from ods_pm_base_subject_info\n             where deleted \u003d \u00270\u0027\n               and dt \u003d (select max(dt) from ods_pm_base_subject_info)\n         ),\n     opci as\n         (\n             select id,\n                    course_name,\n                    subject_id,\n                    teacher,\n                    publisher_id,\n                    chapter_num,\n                    origin_price,\n                    reduce_amount,\n                    actual_price,\n                    create_time,\n                    update_time,\n                    dt\n                 from ods_pm_course_info\n             where deleted \u003d \u00270\u0027\n               and dt \u003d (select max(dt) from ods_pm_course_info)\n         ),\n     opcpi as\n         (\n              select course_id,\n                        collect(row(id, chapter_name, video_id, is_free)) chapters\n              from ods_pm_chapter_info\n              where deleted \u003d \u00270\u0027 and dt \u003d (select max(dt) from ods_pm_chapter_info)\n              group by course_id\n         )\n\nselect opci.id as id,\n       course_name,\n       subject_id,\n       subject_name,\n       category_id,\n       category_name,\n       teacher,\n       publisher_id,\n       chapter_num,\n       origin_price,\n       reduce_amount,\n       actual_price,\n       create_time,\n       update_time,\n       chapters,\n       opci.dt as dt\nfrom opci\nleft join opbsi on opci.subject_id \u003d opbsi.id\nleft join opbci on opbsi.category_id \u003d opbci.id\nleft join opcpi on opci.id \u003d opcpi.course_id) t\n;",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 12:32:54.262",
+      "progress": 0,
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {
+          "1": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "id": "string",
+                      "course_name": "string",
+                      "subject_id": "string",
+                      "subject_name": "string",
+                      "category_id": "string",
+                      "category_name": "string",
+                      "teacher": "string",
+                      "publisher_id": "string",
+                      "chapter_num": "string",
+                      "origin_price": "string",
+                      "reduce_amount": "string",
+                      "actual_price": "string",
+                      "create_time": "string",
+                      "update_time": "string",
+                      "chapters": "string",
+                      "dt": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nInsertion successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/e69193dd94a1c068b4b38c8bdf034954"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688031651211_39452670",
+      "id": "paragraph_1688031651211_39452670",
+      "dateCreated": "2023-06-29 09:40:51.211",
+      "dateStarted": "2023-06-29 12:15:14.596",
+      "dateFinished": "2023-06-29 12:15:18.746",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_video)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_video)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_video;\nCREATE TABLE IF not EXISTS dim_video\n(\n    `id`              bigint COMMENT \u0027编号\u0027,\n    `video_name`      STRING COMMENT \u0027视频名称\u0027,\n    `during_sec`      BIGINT COMMENT \u0027时长\u0027,\n    `video_status`    STRING COMMENT \u0027状态 未上传，上传中，上传完\u0027,\n    `video_size`      BIGINT COMMENT \u0027大小\u0027,\n    `version_id`      bigint COMMENT \u0027版本号\u0027,\n    `chapter_id`      bigint COMMENT \u0027章节id\u0027,\n    `chapter_name`    STRING COMMENT \u0027章节名称\u0027,\n    `is_free`         STRING COMMENT \u0027是否免费\u0027,\n    `course_id`       bigint COMMENT \u0027课程id\u0027,\n    `publisher_id`    bigint COMMENT \u0027发布者id\u0027,\n    `create_time`     timestamp COMMENT \u0027创建时间\u0027,\n    `update_time`     timestamp COMMENT \u0027更新时间\u0027,\n     dt string null comment \u0027分区时间\u0027,\n     primary key(id, dt) not enforced\n) COMMENT \u0027视频维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\ninsert into dim_video\nselect vt.id,\n       video_name,\n       during_sec,\n       video_status,\n       video_size,\n       version_id,\n       chapter_id,\n       chapter_name,\n       is_free,\n       course_id,\n       publisher_id,\n       create_time,\n       update_time,\n       dt\nfrom (\n         select id,\n                video_name,\n                during_sec,\n                video_status,\n                video_size,\n                version_id,\n                chapter_id,\n                course_id,\n                publisher_id,\n                create_time,\n                update_time,\n                dt\n         from ods_pm_video_info\n         where dt \u003d (select max(dt) from ods_pm_video_info) and deleted \u003d \u00270\u0027\n     ) vt\n         join\n     (\n         select id,\n                chapter_name,\n                is_free\n         from ods_pm_chapter_info\n         where dt \u003d  (select max(dt) from ods_pm_chapter_info)\n     ) cht\n     on vt.chapter_id \u003d cht.id\n     ;",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 12:28:42.547",
+      "progress": 0,
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {
+          "1": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "id": "string",
+                      "video_name": "string",
+                      "during_sec": "string",
+                      "video_status": "string",
+                      "video_size": "string",
+                      "version_id": "string",
+                      "chapter_id": "string",
+                      "chapter_name": "string",
+                      "is_free": "string",
+                      "course_id": "string",
+                      "publisher_id": "string",
+                      "create_time": "string",
+                      "update_time": "string",
+                      "dt": "string"
+                    },
+                    "updated": true
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nInsertion successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/2606929eb5b2b04a62c75ec5188da0f0"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688022236395_443240197",
+      "id": "paragraph_1688022236395_443240197",
+      "dateCreated": "2023-06-29 07:03:56.395",
+      "dateStarted": "2023-06-29 12:21:23.546",
+      "dateFinished": "2023-06-29 12:21:27.271",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_paper)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_paper)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_paper;\nCREATE TABLE  IF not EXISTS dim_paper\n(\n    `id`           bigint COMMENT \u0027编号\u0027,\n    `paper_title`  STRING COMMENT \u0027试卷名称\u0027,\n    `course_id`    bigint COMMENT \u0027课程id\u0027,\n    `create_time`  timestamp COMMENT \u0027创建时间\u0027,\n    `update_time`  timestamp COMMENT \u0027更新时间\u0027,\n    `publisher_id` bigint COMMENT \u0027发布者id\u0027,\n    `questions`   multiset\u003crow\u003cquestion_id bigint, score DECIMAL(10, 2)\u003e\u003e COMMENT \u0027题目\u0027,\n     dt string null comment \u0027分区时间\u0027,\n     primary key(id, dt) not enforced\n) COMMENT \u0027试卷维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\ninsert into dim_paper\nselect t1.id,\n       paper_title,\n       course_id,\n       create_time,\n       update_time,\n       publisher_id,\n       questions,\n       dt\nfrom ods_pm_test_paper t1\nleft join (\n         select paper_id,\n                 collect(row(question_id, score)) questions\n         from ods_pm_test_paper_question\n         where deleted \u003d \u00270\u0027 and dt \u003d (select max(dt) from ods_pm_test_paper_question)\n         group by paper_id\n     ) t2\n     on t1.id \u003d t2.paper_id\nwhere t1.deleted \u003d \u00270\u0027 and t1.dt \u003d (select max(dt) from ods_pm_test_paper);\n",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 12:48:01.405",
+      "progress": 0,
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nInsertion successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/ac0d1e632bde6d64ce97f037d8da4fc2"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688041071818_1253064237",
+      "id": "paragraph_1688041071818_1253064237",
+      "dateCreated": "2023-06-29 12:17:51.818",
+      "dateStarted": "2023-06-29 12:35:37.584",
+      "dateFinished": "2023-06-29 12:35:41.378",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_source)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_source)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_source;\nCREATE TABLE IF not EXISTS dim_source\n(\n    `id`            bigint COMMENT \u0027编号\u0027,\n    `source_site` STRING COMMENT \u0027来源\u0027,\n     dt string null comment \u0027分区时间\u0027,\n     primary key(id, dt) not enforced\n) COMMENT \u0027来源维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\ninsert into dim_source\nselect id,\n       source_site,\n       dt\nfrom ods_pm_base_source obsf\nwhere dt \u003d (select max(dt) from ods_pm_base_source);",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 12:48:04.818",
+      "progress": 0,
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nInsertion successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/14b4b286a897a244c8d59e332c3071fd"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688042002100_1896603172",
+      "id": "paragraph_1688042002100_1896603172",
+      "dateCreated": "2023-06-29 12:33:22.100",
+      "dateStarted": "2023-06-29 12:42:44.857",
+      "dateFinished": "2023-06-29 12:42:48.841",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_question)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_question)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_question;\nCREATE TABLE IF not EXISTS dim_question\n(\n    `id`            bigint COMMENT \u0027编号\u0027,\n    `chapter_id`    bigint COMMENT \u0027章节id\u0027,\n    `course_id`     bigint COMMENT \u0027课程id\u0027,\n    `question_type` BIGINT COMMENT \u0027题目类型\u0027,\n    `create_time`   timestamp COMMENT \u0027创建时间\u0027,\n    `update_time`   timestamp COMMENT \u0027更新时间\u0027,\n    `publisher_id`  bigint COMMENT \u0027发布者id\u0027,\n     dt string null comment \u0027分区时间\u0027,\n     primary key(id, dt) not enforced\n) COMMENT \u0027题目维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\ninsert into dim_question\nselect id,\n       chapter_id,\n       course_id,\n       question_type,\n       create_time,\n       update_time,\n       publisher_id,\n       dt\nfrom ods_pm_test_question_info\nwhere deleted \u003d \u00270\u0027\n  and  dt \u003d (select max(dt) from ods_pm_test_question_info);",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 12:50:20.247",
+      "progress": 0,
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nInsertion successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/374765fe72c67445dc9bc9f140a97cb7"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688042777244_2124743405",
+      "id": "paragraph_1688042777244_2124743405",
+      "dateCreated": "2023-06-29 12:46:17.244",
+      "dateStarted": "2023-06-29 12:50:06.952",
+      "dateFinished": "2023-06-29 12:50:10.567",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_province)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_province)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_province;\nCREATE TABLE IF not EXISTS dim_province\n(\n    `id`         bigint COMMENT \u0027编号\u0027,\n    `name`       STRING COMMENT \u0027省名称\u0027,\n    `region_id`  string COMMENT \u0027地区id\u0027,\n    `area_code`  STRING COMMENT \u0027行政区位码\u0027,\n    `iso_code`   STRING COMMENT \u0027国际编码\u0027,\n    `iso_3166_2` STRING COMMENT \u0027ISO3166编码\u0027,\n     dt string null comment \u0027分区时间\u0027,\n     primary key(id, dt) not enforced\n) COMMENT \u0027地区维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\ninsert into dim_province\nselect id,\n       name,\n       region_id,\n       area_code,\n       iso_code,\n       iso_3166_2,\n       dt\nfrom ods_pm_base_province\nwhere dt \u003d (select max(dt) from ods_pm_base_province);",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 13:08:02.996",
+      "progress": 0,
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nInsertion successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/e4a3616c8d64155e459e97b6b4357c65"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688043017374_1217755694",
+      "id": "paragraph_1688043017374_1217755694",
+      "dateCreated": "2023-06-29 12:50:17.374",
+      "dateStarted": "2023-06-29 12:53:34.425",
+      "dateFinished": "2023-06-29 12:53:38.375",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_date)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_date)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_date;\nCREATE TABLE IF not EXISTS dim_date\n(\n    `date_id`    string COMMENT \u0027日期id\u0027,\n    `week_id`    bigint COMMENT \u0027周id,一年中的第几周\u0027,\n    `week_day`   bigint COMMENT \u0027周几\u0027,\n    `day`        bigint COMMENT \u0027每月的第几天\u0027,\n    `month`      bigint COMMENT \u0027一年中的第几月\u0027,\n    `quarter`    bigint COMMENT \u0027一年中的第几季度\u0027,\n    `year`       bigint COMMENT \u0027年份\u0027,\n    `is_workday` bigint COMMENT \u0027是否是工作日\u0027,\n    `holiday_id` STRING COMMENT \u0027节假日\u0027,\n     dt string null comment \u0027分区时间\u0027\n) COMMENT \u0027时间维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\nDROP temporary TABLE IF EXISTS tmp_dim_date_info;\nCREATE temporary TABLE  IF not EXISTS tmp_dim_date_info (\n    `date_id` string COMMENT \u0027日\u0027,\n    `week_id` bigint COMMENT \u0027周id\u0027,\n    `week_day` bigint COMMENT \u0027周几\u0027,\n    `day` bigint COMMENT \u0027每月的第几天\u0027,\n    `month` bigint COMMENT \u0027第几月\u0027,\n    `quarter` bigint COMMENT \u0027第几季度\u0027,\n    `year` bigint COMMENT \u0027年\u0027,\n    `is_workday` bigint COMMENT \u0027是否是工作日\u0027,\n    `holiday_id` STRING COMMENT \u0027节假日\u0027\n) COMMENT \u0027时间维度表\u0027 with (\n    \u0027connector\u0027 \u003d \u0027filesystem\u0027,           -- required: specify the connector\n    \u0027path\u0027 \u003d \u0027hdfs://namenode:8020/data_mocker/tmp_dim_date_info\u0027,  -- required: path to a directory\n    \u0027format\u0027 \u003d \u0027csv\u0027,\n    \u0027csv.field-delimiter\u0027 \u003d \u0027\\t\u0027\n);\n\n\ninsert into dim_date\nselect *,\n      date_format(now(), \u0027yyyy-MM-dd\u0027) dt\nfrom tmp_dim_date_info\n;",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 13:11:13.034",
+      "progress": 0,
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\nInsertion successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/3ccd3d25042971cbbf9a178aa9fe8cb9"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688043240452_148263863",
+      "id": "paragraph_1688043240452_148263863",
+      "dateCreated": "2023-06-29 12:54:00.452",
+      "dateStarted": "2023-06-29 13:10:06.077",
+      "dateFinished": "2023-06-29 13:10:09.982",
+      "status": "FINISHED"
+    },
+    {
+      "title": "DIM-Layer(dim_user_zi)",
+      "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"DIM-Layer(dim_user_zi)\",parallelism\u003d1)\nDROP TABLE IF EXISTS dim_user_zi;\nCREATE TABLE IF not EXISTS dim_user_zi\n(\n    `date_id`    string COMMENT \u0027日期id\u0027,\n    `week_id`    bigint COMMENT \u0027周id,一年中的第几周\u0027,\n    `week_day`   bigint COMMENT \u0027周几\u0027,\n    `day`        bigint COMMENT \u0027每月的第几天\u0027,\n    `month`      bigint COMMENT \u0027一年中的第几月\u0027,\n    `quarter`    bigint COMMENT \u0027一年中的第几季度\u0027,\n    `year`       bigint COMMENT \u0027年份\u0027,\n    `is_workday` bigint COMMENT \u0027是否是工作日\u0027,\n    `holiday_id` STRING COMMENT \u0027节假日\u0027,\n     dt string null comment \u0027分区时间\u0027\n) COMMENT \u0027时间维度表\u0027\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n);\n\nDROP temporary TABLE IF EXISTS tmp_dim_date_info;\nCREATE temporary TABLE  IF not EXISTS tmp_dim_date_info (\n    `date_id` string COMMENT \u0027日\u0027,\n    `week_id` bigint COMMENT \u0027周id\u0027,\n    `week_day` bigint COMMENT \u0027周几\u0027,\n    `day` bigint COMMENT \u0027每月的第几天\u0027,\n    `month` bigint COMMENT \u0027第几月\u0027,\n    `quarter` bigint COMMENT \u0027第几季度\u0027,\n    `year` bigint COMMENT \u0027年\u0027,\n    `is_workday` bigint COMMENT \u0027是否是工作日\u0027,\n    `holiday_id` STRING COMMENT \u0027节假日\u0027\n) COMMENT \u0027时间维度表\u0027 with (\n    \u0027connector\u0027 \u003d \u0027filesystem\u0027,           -- required: specify the connector\n    \u0027path\u0027 \u003d \u0027hdfs://namenode:8020/data_mocker/tmp_dim_date_info\u0027,  -- required: path to a directory\n    \u0027format\u0027 \u003d \u0027csv\u0027,\n    \u0027csv.field-delimiter\u0027 \u003d \u0027\\t\u0027\n);\n\n\ninsert into dim_date\nselect *,\n      date_format(now(), \u0027yyyy-MM-dd\u0027) dt\nfrom tmp_dim_date_info\n;",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 13:11:32.561",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688044270500_1837623565",
+      "id": "paragraph_1688044270500_1837623565",
+      "dateCreated": "2023-06-29 13:11:10.500",
+      "status": "READY"
+    },
+    {
+      "text": "%flink.bsql\nselect * from dim_date limit 10;",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 13:12:06.649",
+      "progress": 100,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "date_id": "string",
+                      "week_id": "string",
+                      "week_day": "string",
+                      "day": "string",
+                      "month": "string",
+                      "quarter": "string",
+                      "year": "string",
+                      "is_workday": "string",
+                      "holiday_id": "string",
+                      "dt": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "date_id\tweek_id\tweek_day\tday\tmonth\tquarter\tyear\tis_workday\tholiday_id\tdt\n2022-01-01\t1\t6\t1\t1\t1\t2022\t0\t元旦\t2023-06-29\n2022-01-02\t1\t7\t2\t1\t1\t2022\t0\t元旦\t2023-06-29\n2022-01-03\t2\t1\t3\t1\t1\t2022\t0\t元旦\t2023-06-29\n2022-01-04\t2\t2\t4\t1\t1\t2022\t1\t\\N\t2023-06-29\n2022-01-05\t2\t3\t5\t1\t1\t2022\t1\t\\N\t2023-06-29\n2022-01-06\t2\t4\t6\t1\t1\t2022\t1\t\\N\t2023-06-29\n2022-01-07\t2\t5\t7\t1\t1\t2022\t1\t\\N\t2023-06-29\n2022-01-08\t2\t6\t8\t1\t1\t2022\t0\t\\N\t2023-06-29\n2022-01-09\t2\t7\t9\t1\t1\t2022\t0\t\\N\t2023-06-29\n2022-01-10\t3\t1\t10\t1\t1\t2022\t1\t\\N\t2023-06-29\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://jobmanager:8081#/job/6a7e86e736a65dcd9b044f866c8c8ee8"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688042509711_308998790",
+      "id": "paragraph_1688042509711_308998790",
+      "dateCreated": "2023-06-29 12:41:49.711",
+      "dateStarted": "2023-06-29 13:12:03.136",
+      "dateFinished": "2023-06-29 13:12:06.583",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.bsql\n",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-29 13:10:37.028",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1688044237028_1944519104",
+      "id": "paragraph_1688044237028_1944519104",
+      "dateCreated": "2023-06-29 13:10:37.028",
+      "status": "READY"
+    }
+  ],
+  "name": "DIM-Layer",
+  "id": "2J6RJQTMX",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.1",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {
+    "isRunning": false
+  }
+}
