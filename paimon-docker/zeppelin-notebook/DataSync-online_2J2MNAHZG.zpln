@@ -1,19 +1,19 @@
 {
   "paragraphs": [
     {
-      "text": "%flink.conf\n# 需要将每个note资源设置隔离\nFLINK_HOME /opt/flink\nflink.execution.mode remote\nflink.execution.remote.host\tjobmanager\nflink.execution.remote.port 8081\nexecution.checkpointing.interval 30000\nstate.backend rocksdb\nstate.checkpoints.dir hdfs://namenode:8020/flink-checkpoints\nstate.savepoints.dir hdfs://namenode:8020/flink-savepoints\nstate.backend.incremental true\ntaskmanager.network.blocking-shuffle.type mmap\ntaskmanager.network.blocking-shuffle.compression.enabled true\njobmanager.archive.fs.dir hdfs://completed-jobs\ncluster.evenly-spread-out-slots true\nheartbeat.timeout 180000\nakka.framesize 251658240b\nclassloader.check-leaked-classloader false",
+      "text": "0%flink.conf\n# 需要将每个note资源设置隔离\nFLINK_HOME /opt/flink\nflink.execution.mode remote\nflink.execution.remote.host\tjobmanager\nflink.execution.remote.port 8081\nexecution.checkpointing.interval 30000\nstate.backend rocksdb\nstate.checkpoints.dir hdfs://namenode:8020/flink-checkpoints\nstate.savepoints.dir hdfs://namenode:8020/flink-savepoints\nstate.backend.incremental true\ntaskmanager.network.blocking-shuffle.type mmap\ntaskmanager.network.blocking-shuffle.compression.enabled true\njobmanager.archive.fs.dir hdfs://completed-jobs\ncluster.evenly-spread-out-slots true\nheartbeat.timeout 180000\nakka.framesize 251658240b\nclassloader.check-leaked-classloader false",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 12:03:42.941",
+      "dateUpdated": "2023-07-16 07:04:52.326",
       "progress": 0,
       "config": {
         "editorSetting": {
-          "language": "text",
+          "language": "scala",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/text",
+        "editorMode": "ace/mode/scala",
         "fontSize": 9.0,
         "results": {},
         "enabled": true
@@ -129,7 +129,7 @@
       "title": "Increment sync tables list",
       "text": "%md\nods_mysql_cart_info_inc\nods_mysql_comment_info_inc\nods_mysql_favor_info_inc\nods_mysql_order_detail_inc\nods_mysql_order_info_inc\nods_mysql_payment_info_inc\nods_mysql_review_info_inc\nods_mysql_test_exam_inc\nods_mysql_user_info_inc\nods_mysql_vip_change_detail_inc\nods_mysql_test_exam_questionl_inc",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:23:11.557",
+      "dateUpdated": "2023-07-16 07:56:55.632",
       "progress": 0,
       "config": {
         "colWidth": 12.0,
@@ -144,7 +144,7 @@
         },
         "editorMode": "ace/mode/markdown",
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": true
       },
       "settings": {
@@ -174,7 +174,7 @@
       "title": "Increment sync 11 tables(ods_mysql_cart_info_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_cart_info_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_cart_info_inc;\ncreate temporary table if not exists ods_mysql_cart_info_inc (\n    id          bigint  comment \u0027编号\u0027,\n    user_id     bigint         null comment \u0027用户id\u0027,\n    course_id   bigint         null comment \u0027课程id\u0027,\n    course_name varchar(200)   null comment \u0027sku名称 (冗余)\u0027,\n    cart_price  decimal(10, 2) null comment \u0027放入购物车时价格\u0027,\n    img_url     varchar(200)   null comment \u0027图片文件\u0027,\n    session_id  varchar(200)   null comment \u0027会话id\u0027,\n    create_time timestamp       null comment \u0027创建时间\u0027,\n    update_time timestamp       null comment \u0027修改时间\u0027,\n    deleted     varchar(2)     null,\n    sold        varchar(2)     null comment \u0027是否已售\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027cart_info\u0027\n);\n\ndrop table if exists ods_pm_cart_info_inc;\ncreate table if not exists ods_pm_cart_info_inc  (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_cart_info_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_cart_info_inc\nselect id, user_id, course_id, course_name, cart_price, img_url, session_id, create_time, update_time, deleted, sold,  date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_cart_info_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:23:55.143",
+      "dateUpdated": "2023-07-16 08:04:57.139",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/c4fa64e096966d3287efdf970c9eaadd/chk-1",
@@ -237,7 +237,7 @@
       "title": "Increment sync 11 tables(ods_mysql_comment_info_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_comment_info_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_comment_info_inc;\ncreate temporary table if not exists ods_mysql_comment_info_inc (\n    id          bigint  comment \u0027编号\u0027,\n    user_id     bigint         null comment \u0027用户id\u0027,\n    course_id   bigint         null comment \u0027课程id\u0027,\n    course_name varchar(200)   null comment \u0027sku名称 (冗余)\u0027,\n    cart_price  decimal(10, 2) null comment \u0027放入购物车时价格\u0027,\n    img_url     varchar(200)   null comment \u0027图片文件\u0027,\n    session_id  varchar(200)   null comment \u0027会话id\u0027,\n    create_time timestamp       null comment \u0027创建时间\u0027,\n    update_time timestamp       null comment \u0027修改时间\u0027,\n    deleted     varchar(2)     null,\n    sold        varchar(2)     null comment \u0027是否已售\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027comment_info\u0027\n);\n\ndrop table if exists ods_pm_comment_info_inc;\ncreate table if not exists ods_pm_comment_info_inc  (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_comment_info_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_comment_info_inc\nselect id, user_id, course_id, course_name, cart_price, img_url, session_id, create_time, update_time, deleted, sold,  date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_comment_info_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:40:13.257",
+      "dateUpdated": "2023-07-16 08:06:49.715",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/1503661fcec9d570e63584513decdd07/chk-1",
@@ -300,7 +300,7 @@
       "title": "Increment sync 11 tables(ods_mysql_favor_info_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_favor_info_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_favor_info_inc;\ncreate temporary table if not exists ods_mysql_favor_info_inc (\n    id          bigint not null comment \u0027编号\u0027,\n    course_id   bigint     null comment \u0027课程id\u0027,\n    user_id     bigint     null comment \u0027用户id\u0027,\n    create_time timestamp   null comment \u0027创建时间\u0027,\n    update_time timestamp   null comment \u0027更新时间\u0027,\n    deleted     varchar(2) null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027favor_info\u0027\n);\n\ndrop table if exists ods_pm_favor_info_inc;\ncreate table if not exists ods_pm_favor_info_inc (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_favor_info_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_favor_info_inc\nselect id, course_id, user_id, create_time, update_time, deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_favor_info_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:30:04.479",
+      "dateUpdated": "2023-07-16 08:09:20.621",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/c6653cf166d79b47e87caf91edd9fd5f/chk-7",
@@ -363,7 +363,7 @@
       "title": "Increment sync 11 tables(ods_mysql_order_detail_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_order_detail_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_order_detail_inc;\ncreate temporary table if not exists ods_mysql_order_detail_inc (\n    id            bigint not null comment \u0027编号\u0027,\n    course_id     bigint         null comment \u0027课程id\u0027,\n    course_name   varchar(4000)  null comment \u0027课程名称\u0027,\n    order_id      bigint         null comment \u0027订单编号\u0027,\n    user_id       bigint         null comment \u0027用户id\u0027,\n    origin_amount decimal(16, 2) null comment \u0027原始金额\u0027,\n    coupon_reduce decimal(16, 2) null comment \u0027优惠劵减免金额\u0027,\n    final_amount  decimal(16, 2) null comment \u0027最终金额\u0027,\n    create_time   timestamp       null comment \u0027创建时间\u0027,\n    update_time   timestamp       null comment \u0027更新时间\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027order_detail\u0027\n);\n\ndrop table if exists ods_pm_order_detail_inc;\ncreate table if not exists ods_pm_order_detail_inc (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_order_detail_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_order_detail_inc\nselect id, course_id, course_name, order_id, user_id, origin_amount, coupon_reduce, final_amount,\n                          create_time, update_time, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_order_detail_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:30:05.528",
+      "dateUpdated": "2023-07-16 08:10:00.438",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/91696a0a7d324fe1e26ac38cce5d7322/chk-6",
@@ -426,7 +426,7 @@
       "title": "Increment sync 11 tables(ods_mysql_order_info_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_order_info_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_order_info_inc;\ncreate temporary table if not exists ods_mysql_order_info_inc (\n    id            BIGINT not null comment \u0027编号\u0027,\n    user_id       BIGINT     null comment \u0027用户id\u0027,\n    origin_amount DECIMAL(10, 2) null comment \u0027原始金额\u0027,\n    coupon_reduce DECIMAL(10, 2) null comment \u0027优惠券减免\u0027,\n    final_amount  DECIMAL(10, 2) null comment \u0027最终金额\u0027,\n    order_status  VARCHAR(20)    null comment \u0027订单状态\u0027,\n    out_trade_no  VARCHAR(50)    null comment \u0027订单交易编号（第三方支付用)\u0027,\n    trade_body    VARCHAR(200)   null comment \u0027订单描述(第三方支付用)\u0027,\n    session_id    VARCHAR(100)   null comment \u0027session id\u0027,\n    province_id   BIGINT     null comment \u0027地区id\u0027,\n    create_time   timestamp   null comment \u0027创建时间\u0027,\n    expire_time   timestamp   null comment \u0027失效时间\u0027,\n    update_time   timestamp   null comment \u0027更新时间\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027order_info\u0027\n);\n\ndrop table if exists ods_pm_order_info_inc;\ncreate table if not exists ods_pm_order_info_inc (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_order_info_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_order_info_inc\nselect id, user_id, origin_amount, coupon_reduce, final_amount, order_status, out_trade_no, trade_body,\n                        session_id, province_id, create_time, expire_time, update_time, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\n\nfrom ods_mysql_order_info_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:30:28.600",
+      "dateUpdated": "2023-07-16 08:10:28.369",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/9fd3648561833ce66403531dedbc5277/chk-1",
@@ -489,7 +489,7 @@
       "title": "Increment sync 11 tables(ods_mysql_payment_info_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_payment_info_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_payment_info_inc;\ncreate temporary table if not exists ods_mysql_payment_info_inc (\n    id               int not null comment \u0027编号\u0027,\n    out_trade_no     varchar(50)   null comment \u0027对外业务编号\u0027,\n    order_id         bigint        null comment \u0027订单编号\u0027,\n    alipay_trade_no  varchar(50)   null comment \u0027支付宝交易编号\u0027,\n    total_amount     decimal       null comment \u0027支付金额\u0027,\n    trade_body       varchar(200)  null comment \u0027交易内容\u0027,\n    payment_type     varchar(20)   null,\n    payment_status   varchar(20)   null comment \u0027支付状态\u0027,\n    create_time      timestamp      null comment \u0027创建时间\u0027,\n    update_time      timestamp      null comment \u0027更新时间\u0027,\n    callback_content varchar(1000) null comment \u0027回调信息\u0027,\n    callback_time    timestamp      null comment \u0027回调时间\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027payment_info\u0027\n);\n\ndrop table if exists ods_pm_payment_info_inc;\ncreate table if not exists ods_pm_payment_info_inc (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_payment_info_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_payment_info_inc\nselect id, out_trade_no, order_id, alipay_trade_no, total_amount, trade_body, payment_type,\n                          payment_status, create_time, update_time, callback_content, callback_time,  date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_payment_info_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:35:49.887",
+      "dateUpdated": "2023-07-16 08:10:50.016",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/a285048504802e18887ff9e1d3e147a1/chk-2",
@@ -552,7 +552,7 @@
       "title": "Increment sync 11 tables(ods_mysql_review_info_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_review_info_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_review_info_inc;\ncreate temporary table if not exists ods_mysql_review_info_inc (\n    id           BIGINT not null comment \u0027编号\u0027,\n    user_id      BIGINT    null comment \u0027用户名称\u0027,\n    course_id    BIGINT    null comment \u0027课程id\u0027,\n    review_txt   string null comment \u0027评价内容\u0027,\n    review_stars BIGINT    null comment \u0027评价\u0027,\n    create_time  timestamp  null comment \u0027创建时间\u0027,\n    deleted      VARCHAR(1)    null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027review_info\u0027\n);\n\ndrop table if exists ods_pm_review_info_inc;\ncreate table if not exists ods_pm_review_info_inc (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_review_info_inc (\n    EXCLUDING ALL\n);\n\ninsert into ods_pm_review_info_inc\nselect id, user_id, course_id, review_txt, review_stars, create_time, deleted, date_format(create_time, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_review_info_inc;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:39:59.360",
+      "dateUpdated": "2023-07-16 08:11:11.708",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/57a042caad5aace5da2e5179b5fe053e/chk-1",
@@ -615,7 +615,7 @@
       "title": "Increment sync 11 tables(ods_mysql_test_exam_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_test_exam_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_test_exam_inc;\ncreate temporary table if not exists ods_mysql_test_exam_inc (\n    id           bigint not null comment \u0027编号\u0027,\n    paper_id     bigint         null comment \u0027考卷id\u0027,\n    user_id      bigint         null comment \u0027课程id\u0027,\n    score        decimal(10, 2) null comment \u0027分数\u0027,\n    duration_sec bigint         null comment \u0027所用时长\u0027,\n    create_time  timestamp       null comment \u0027创建时间\u0027,\n    submit_time  timestamp       null comment \u0027提交时间\u0027,\n    update_time  timestamp       null comment \u0027更新时间\u0027,\n    deleted      varchar(2)     null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027test_exam\u0027\n);\n\ndrop table if exists ods_pm_test_exam_inc;\ncreate table if not exists ods_pm_test_exam_inc (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_test_exam_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_test_exam_inc\nselect id, paper_id, user_id, score, duration_sec, create_time, submit_time, update_time, deleted,  date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_test_exam_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:36:40.414",
+      "dateUpdated": "2023-07-16 08:11:41.558",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/f19c09eb9fb1d575e8f1afc36f0db349/chk-3",
@@ -678,7 +678,7 @@
       "title": "Increment sync 11 tables(ods_mysql_user_info_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_user_info_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_user_info_inc;\ncreate temporary table if not exists ods_mysql_user_info_inc (\n    id           bigint not null comment \u0027编号\u0027,\n    login_name   varchar(200) null comment \u0027用户名称\u0027,\n    nick_name    varchar(200) null comment \u0027用户昵称\u0027,\n    passwd       varchar(200) null comment \u0027用户密码\u0027,\n    real_name    varchar(200) null comment \u0027用户姓名\u0027,\n    phone_num    varchar(200) null comment \u0027手机号\u0027,\n    email        varchar(200) null comment \u0027邮箱\u0027,\n    head_img     varchar(200) null comment \u0027头像\u0027,\n    user_level   varchar(200) null comment \u0027用户级别\u0027,\n    birthday     date         null comment \u0027用户生日\u0027,\n    gender       varchar(1)   null comment \u0027性别 M男,F女\u0027,\n    create_time  timestamp     null comment \u0027创建时间\u0027,\n    operate_time timestamp     null comment \u0027修改时间\u0027,\n    status       varchar(200) null comment \u0027状态\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027user_info\u0027\n);\n\ndrop table if exists ods_pm_user_info_inc;\ncreate table if not exists ods_pm_user_info_inc (dt string null comment \u0027分区时间\u0027)\n partitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_user_info_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_user_info_inc\nselect id, login_name, nick_name, passwd, real_name, phone_num, email, head_img, user_level, birthday,\n                       gender, create_time, operate_time, status,  date_format(create_time, \u0027yyyy-MM-dd\u0027) dt\n\nfrom ods_mysql_user_info_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:36:42.302",
+      "dateUpdated": "2023-07-16 08:12:05.954",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/3aebb370d2cc4a1f4686db761a9af147/chk-3",
@@ -741,7 +741,7 @@
       "title": "Increment sync 11 tables(ods_mysql_vip_change_detail_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_vip_change_detail_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_vip_change_detail_inc;\ncreate temporary table if not exists ods_mysql_vip_change_detail_inc (\n    id          BIGINT not null comment \u0027编号\u0027,\n    user_id     BIGINT   null comment \u0027用户id\u0027,\n    from_vip    BIGINT   null comment \u0027vip(从）\u0027,\n    to_vip      BIGINT  null comment \u0027vip(到）\u0027,\n    create_time timestamp null comment \u0027创建时间\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027vip_change_detail\u0027\n);\n\ndrop table if exists ods_pm_vip_change_detail_inc;\ncreate table if not exists ods_pm_vip_change_detail_inc (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_vip_change_detail_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_vip_change_detail_inc\nselect id, user_id, from_vip, to_vip, create_time,  date_format(create_time, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_vip_change_detail_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:36:54.414",
+      "dateUpdated": "2023-07-16 08:12:45.465",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/12923dae75fdf48a69da79070d554c94/chk-1",
@@ -755,7 +755,7 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/sql",
         "fontSize": 9.0,
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "results": {},
         "enabled": true
@@ -804,7 +804,7 @@
       "title": "Increment sync 11 tables(ods_mysql_test_exam_questionl_inc)",
       "text": "%flink.ssql(type\u003dsingle,jobName\u003d\"Increment sync 11 tables(ods_mysql_test_exam_questionl_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_test_exam_questionl_inc;\ncreate temporary table if not exists ods_mysql_test_exam_questionl_inc (\n    id          BIGINT not null comment \u0027编号\u0027,\n    exam_id     BIGINT     null comment \u0027考试id\u0027,\n    paper_id    BIGINT     null comment \u0027试卷id\u0027,\n    question_id BIGINT     null comment \u0027问题id\u0027,\n    user_id     BIGINT     null comment \u0027课程id\u0027,\n    answer      VARCHAR(2000)  null comment \u0027答案\u0027,\n    is_correct  VARCHAR(2)     null comment \u0027是否正确\u0027,\n    score       DECIMAL(16, 2) null comment \u0027本题得分\u0027,\n    create_time timestamp   null comment \u0027创建时间\u0027,\n    update_time timestamp   null comment \u0027更新时间\u0027,\n    deleted     VARCHAR(2)     null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027mysql-cdc\u0027,\n    \u0027hostname\u0027 \u003d \u0027mysql\u0027,\n    \u0027port\u0027 \u003d \u00273306\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027database-name\u0027 \u003d \u0027edu\u0027,\n    \u0027table-name\u0027 \u003d \u0027test_exam_question\u0027\n);\n\ndrop table if exists ods_pm_test_exam_question_inc;\ncreate table if not exists ods_pm_test_exam_question_inc (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_test_exam_questionl_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_test_exam_question_inc\nselect id, exam_id, paper_id, question_id, user_id, answer, is_correct, score, create_time,\n                                update_time, deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\n\n\nfrom ods_mysql_test_exam_questionl_inc;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 06:36:47.903",
+      "dateUpdated": "2023-07-16 08:13:44.814",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/1da48350ae3b0cee1774a6b808973c1a/chk-3",
@@ -818,7 +818,7 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/sql",
         "fontSize": 9.0,
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "results": {},
         "enabled": true

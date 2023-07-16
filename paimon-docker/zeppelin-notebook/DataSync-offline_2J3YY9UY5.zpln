@@ -3,7 +3,7 @@
     {
       "text": "%flink.conf\n# 需要将每个note资源设置隔离\nFLINK_HOME /opt/flink\nflink.execution.mode remote\nflink.execution.remote.host\tjobmanager\nflink.execution.remote.port 8081\ntaskmanager.network.blocking-shuffle.type mmap\ntaskmanager.network.blocking-shuffle.compression.enabled true\njobmanager.archive.fs.dir hdfs://completed-jobs\ncluster.evenly-spread-out-slots true\nheartbeat.timeout 180000\nakka.framesize 251658240b\nclassloader.check-leaked-classloader false",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 12:19:47.199",
+      "dateUpdated": "2023-07-15 14:54:42.613",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -32,14 +32,14 @@
       "jobName": "paragraph_1687952027150_932193128",
       "id": "paragraph_1687337579736_248171164",
       "dateCreated": "2023-06-28 11:33:47.150",
-      "dateStarted": "2023-06-29 12:19:47.204",
-      "dateFinished": "2023-06-29 12:19:47.206",
+      "dateStarted": "2023-07-15 14:54:42.619",
+      "dateFinished": "2023-07-15 14:54:42.620",
       "status": "FINISHED"
     },
     {
       "text": "%file\nls /",
       "user": "anonymous",
-      "dateUpdated": "2023-06-28 11:33:47.150",
+      "dateUpdated": "2023-07-15 14:52:45.475",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -73,12 +73,55 @@
       "jobName": "paragraph_1687952027150_445674199",
       "id": "paragraph_1687870830714_226176832",
       "dateCreated": "2023-06-28 11:33:47.150",
-      "status": "READY"
+      "dateStarted": "2023-07-15 14:52:45.480",
+      "dateFinished": "2023-07-15 14:52:47.260",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.bsql\n\nselect version();",
+      "user": "anonymous",
+      "dateUpdated": "2023-07-15 14:54:58.886",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.lang.IndexOutOfBoundsException: Index: 0, Size: 0\n\tat java.util.ArrayList.rangeCheck(ArrayList.java:659)\n\tat java.util.ArrayList.get(ArrayList.java:435)\n\tat org.apache.zeppelin.interpreter.launcher.FlinkInterpreterLauncher.chooseFlinkAppJar(FlinkInterpreterLauncher.java:148)\n\tat org.apache.zeppelin.interpreter.launcher.FlinkInterpreterLauncher.buildEnvFromProperties(FlinkInterpreterLauncher.java:84)\n\tat org.apache.zeppelin.interpreter.launcher.StandardInterpreterLauncher.launchDirectly(StandardInterpreterLauncher.java:77)\n\tat org.apache.zeppelin.interpreter.launcher.InterpreterLauncher.launch(InterpreterLauncher.java:110)\n\tat org.apache.zeppelin.interpreter.InterpreterSetting.createInterpreterProcess(InterpreterSetting.java:856)\n\tat org.apache.zeppelin.interpreter.ManagedInterpreterGroup.getOrCreateInterpreterProcess(ManagedInterpreterGroup.java:66)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.getOrCreateInterpreterProcess(RemoteInterpreter.java:104)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.internal_create(RemoteInterpreter.java:154)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.open(RemoteInterpreter.java:126)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.getFormType(RemoteInterpreter.java:271)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:438)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:69)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:182)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1689432884446_1339984314",
+      "id": "paragraph_1689432884446_1339984314",
+      "dateCreated": "2023-07-15 14:54:44.446",
+      "dateStarted": "2023-07-15 14:54:58.889",
+      "dateFinished": "2023-07-15 14:54:58.891",
+      "status": "ERROR"
     },
     {
       "text": "%flink.bsql\n-- hdfs://hdfs-master:9000/hudi/flink_stream_write\ndrop catalog if exists paimon_catelog;\ncreate catalog paimon_catelog with (\n    \u0027type\u0027\u003d\u0027paimon\u0027,\n    \u0027warehouse\u0027\u003d\u0027hdfs://namenode:8020/paimon_datalake\u0027\n);\nuse CATALOG paimon_catelog;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 12:19:44.282",
+      "dateUpdated": "2023-07-15 14:54:35.786",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -105,11 +148,11 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
             "type": "TEXT",
-            "data": "Catalog has been dropped.\nCatalog has been created.\n"
+            "data": "java.lang.IndexOutOfBoundsException: Index: 0, Size: 0\n\tat java.util.ArrayList.rangeCheck(ArrayList.java:659)\n\tat java.util.ArrayList.get(ArrayList.java:435)\n\tat org.apache.zeppelin.interpreter.launcher.FlinkInterpreterLauncher.chooseFlinkAppJar(FlinkInterpreterLauncher.java:148)\n\tat org.apache.zeppelin.interpreter.launcher.FlinkInterpreterLauncher.buildEnvFromProperties(FlinkInterpreterLauncher.java:84)\n\tat org.apache.zeppelin.interpreter.launcher.StandardInterpreterLauncher.launchDirectly(StandardInterpreterLauncher.java:77)\n\tat org.apache.zeppelin.interpreter.launcher.InterpreterLauncher.launch(InterpreterLauncher.java:110)\n\tat org.apache.zeppelin.interpreter.InterpreterSetting.createInterpreterProcess(InterpreterSetting.java:856)\n\tat org.apache.zeppelin.interpreter.ManagedInterpreterGroup.getOrCreateInterpreterProcess(ManagedInterpreterGroup.java:66)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.getOrCreateInterpreterProcess(RemoteInterpreter.java:104)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.internal_create(RemoteInterpreter.java:154)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.open(RemoteInterpreter.java:126)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.getFormType(RemoteInterpreter.java:271)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:438)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:69)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:182)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
           }
         ]
       },
@@ -119,9 +162,9 @@
       "jobName": "paragraph_1687952027150_656542312",
       "id": "paragraph_1687338800195_1149780972",
       "dateCreated": "2023-06-28 11:33:47.150",
-      "dateStarted": "2023-06-29 12:19:44.286",
-      "dateFinished": "2023-06-29 12:19:45.216",
-      "status": "FINISHED"
+      "dateStarted": "2023-07-15 14:54:35.789",
+      "dateFinished": "2023-07-15 14:54:35.790",
+      "status": "ERROR"
     },
     {
       "title": "Full sync 15 tables",
@@ -170,7 +213,7 @@
       "title": "Full sync 15 tables(ods_mysql_base_category_info)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_base_category_info)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_base_category_info;\ncreate temporary table if not exists ods_mysql_base_category_info (\n    id            bigint       not null  comment \u0027编号\u0027,\n    category_name varchar(200) null comment \u0027分类名称\u0027,\n    create_time   timestamp     null comment \u0027创建时间\u0027,\n    update_time   timestamp     null comment \u0027更新时间\u0027,\n    deleted       varchar(2)   null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027table-name\u0027 \u003d \u0027base_category_info\u0027\n);\n\ndrop table if exists ods_pm_base_category_info;\ncreate table if not exists ods_pm_base_category_info (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_base_category_info (\n    EXCLUDING ALL\n);\ninsert into ods_pm_base_category_info \nselect id, category_name, create_time, update_time, deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_base_category_info",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 05:29:23.369",
+      "dateUpdated": "2023-07-16 08:21:39.352",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/99fd67798324f268ec9691fe399efd38/chk-3",
@@ -268,7 +311,7 @@
       "title": "Full sync 15 tables(ods_mysql_base_province)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_base_province)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_base_province;\ncreate temporary table if not exists ods_mysql_base_province (\n    id         bigint      not null comment \u0027id\u0027,\n    name       varchar(20) null comment \u0027省名称\u0027,\n    region_id  varchar(20) null comment \u0027大区id\u0027,\n    area_code  varchar(20) null comment \u0027行政区位码\u0027,\n    iso_code   varchar(20) null comment \u0027国际编码\u0027,\n    iso_3166_2 varchar(20) null comment \u0027ISO3166编码\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027table-name\u0027 \u003d \u0027base_province\u0027\n);\n\ndrop table if exists ods_pm_base_province;\ncreate table if not exists ods_pm_base_province (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_base_province (\n    EXCLUDING ALL\n);\ninsert into ods_pm_base_province\nselect id, name, region_id, area_code, iso_code, iso_3166_2, date_format(now(), \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_base_province;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 13:00:14.311",
+      "dateUpdated": "2023-07-16 08:23:03.717",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/9df0ce2af27d326e0a01ab025385c68e/chk-1",
@@ -370,7 +413,7 @@
       "title": "Full sync 15 tables(ods_mysql_base_source)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_base_source)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_base_source;\ncreate temporary table if not exists ods_mysql_base_source (\n    id          bigint       not null,\n    source_site varchar(20)  null,\n    source_url  varchar(200) null,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n\n    \u0027table-name\u0027 \u003d \u0027base_source\u0027\n);\n\ndrop table if exists ods_pm_base_source;\ncreate table if not exists ods_pm_base_source (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_base_source (\n    EXCLUDING ALL\n);\ninsert into ods_pm_base_source\nselect id, source_site, source_url, date_format(now(), \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_base_source;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 12:51:02.767",
+      "dateUpdated": "2023-07-16 08:23:32.273",
       "progress": 0,
       "config": {
         "tableHide": true,
@@ -434,7 +477,7 @@
       "title": "Full sync 15 tables(ods_mysql_base_subject_info)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_base_subject_info)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_base_subject_info;\ncreate temporary table if not exists ods_mysql_base_subject_info (\n    id           bigint not null comment \u0027编号\u0027,\n    subject_name varchar(200) null comment \u0027科目名称\u0027,\n    category_id  bigint       null comment \u0027分类\u0027,\n    create_time  timestamp     null comment \u0027创建时间\u0027,\n    update_time  timestamp     null comment \u0027更新时间\u0027,\n    deleted      varchar(2)   null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n\n    \u0027table-name\u0027 \u003d \u0027base_subject_info\u0027\n);\n\ndrop table if exists ods_pm_base_subject_info;\ncreate table if not exists ods_pm_base_subject_info (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_base_subject_info (\n    EXCLUDING ALL\n);\ninsert into ods_pm_base_subject_info\nselect id, subject_name, category_id,create_time,update_time,deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_base_subject_info;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 05:29:37.745",
+      "dateUpdated": "2023-07-16 08:23:56.095",
       "progress": 0,
       "config": {
         "tableHide": true,
@@ -498,7 +541,7 @@
       "title": "Full sync 15 tables(ods_mysql_cart_info)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_cart_info)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_cart_info;\ncreate temporary table if not exists ods_mysql_cart_info (\n    id          bigint  comment \u0027编号\u0027,\n    user_id     bigint         null comment \u0027用户id\u0027,\n    course_id   bigint         null comment \u0027课程id\u0027,\n    course_name varchar(200)   null comment \u0027sku名称 (冗余)\u0027,\n    cart_price  decimal(10, 2) null comment \u0027放入购物车时价格\u0027,\n    img_url     varchar(200)   null comment \u0027图片文件\u0027,\n    session_id  varchar(200)   null comment \u0027会话id\u0027,\n    create_time timestamp       null comment \u0027创建时间\u0027,\n    update_time timestamp       null comment \u0027修改时间\u0027,\n    deleted     varchar(2)     null,\n    sold        varchar(2)     null comment \u0027是否已售\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027table-name\u0027 \u003d \u0027cart_info\u0027\n);\n\ndrop table if exists ods_pm_cart_info;\ncreate table if not exists ods_pm_cart_info (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_cart_info (\n    EXCLUDING ALL\n);\ninsert into ods_pm_cart_info\nselect id, user_id, course_id, course_name, cart_price, img_url, session_id, create_time, update_time, deleted, sold, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\n\nfrom ods_mysql_cart_info;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 05:29:41.454",
+      "dateUpdated": "2023-07-16 08:24:20.700",
       "progress": 0,
       "config": {
         "tableHide": true,
@@ -562,7 +605,7 @@
       "title": "Full sync 15 tables(ods_mysql_chapter_info)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_chapter_info)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_chapter_info;\ncreate temporary table if not exists ods_mysql_chapter_info (\n    id           bigint not null comment \u0027编号\u0027,\n    chapter_name varchar(200) null comment \u0027章节名称\u0027,\n    course_id    bigint       null comment \u0027课程id\u0027,\n    video_id     bigint       null comment \u0027视频id\u0027,\n    publisher_id bigint       null comment \u0027发布者id\u0027,\n    is_free      varchar(2)   null comment \u0027是否免费\u0027,\n    create_time  timestamp     null comment \u0027创建时间\u0027,\n    deleted      varchar(2)   null comment \u0027是否删除\u0027,\n    update_time  timestamp     null comment \u0027更新时间\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027table-name\u0027 \u003d \u0027chapter_info\u0027\n);\n\ndrop table if exists ods_pm_chapter_info;\ncreate table if not exists ods_pm_chapter_info (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_chapter_info (\n    EXCLUDING ALL\n);\ninsert into ods_pm_chapter_info\nselect id, chapter_name, course_id, video_id, publisher_id, is_free, create_time, deleted,update_time, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_chapter_info;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 12:17:12.683",
+      "dateUpdated": "2023-07-16 08:24:40.095",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/72923ae526a06db4a99a957df137d1e3/chk-1",
@@ -627,7 +670,7 @@
       "title": "Full sync 15 tables(ods_mysql_course_info)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_course_info)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_course_info;\ncreate temporary table if not exists ods_mysql_course_info (\n    id               bigint not null comment \u0027编号\u0027,\n    course_name      varchar(200)   null comment \u0027课程名称\u0027,\n    course_slogan    varchar(200)   null comment \u0027课程标语\u0027,\n    course_cover_url varchar(200)   null comment \u0027课程封面\u0027,\n    subject_id       bigint         null comment \u0027学科id\u0027,\n    teacher          varchar(4000)  null comment \u0027讲师名称\u0027,\n    publisher_id     bigint         null comment \u0027发布者id\u0027,\n    chapter_num      bigint         null comment \u0027章节数\u0027,\n    origin_price     decimal(16, 2) null comment \u0027价格\u0027,\n    reduce_amount    decimal(16, 2) null comment \u0027优惠金额\u0027,\n    actual_price     decimal(16, 2) null comment \u0027实际价格\u0027,\n    course_introduce varchar(2000)  null comment \u0027课程介绍\u0027,\n    create_time      timestamp       null comment \u0027创建时间\u0027,\n    deleted          varchar(2)     null comment \u0027是否删除\u0027,\n    update_time      timestamp       null comment \u0027更新时间\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n\n    \u0027table-name\u0027 \u003d \u0027course_info\u0027\n);\n\ndrop table if exists ods_pm_course_info;\ncreate table if not exists ods_pm_course_info (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_course_info (\n    EXCLUDING ALL\n);\ninsert into ods_pm_course_info\nselect id, course_name, course_slogan, course_cover_url, subject_id, teacher, publisher_id,\n                         chapter_num, origin_price, reduce_amount, actual_price, course_introduce, create_time, deleted, \n                         update_time,date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_course_info;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 02:24:02.931",
+      "dateUpdated": "2023-07-16 08:24:57.551",
       "progress": 0,
       "config": {
         "tableHide": true,
@@ -691,7 +734,7 @@
       "title": "Full sync 15 tables(ods_mysql_knowledge_point)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_knowledge_point)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_knowledge_point;\ncreate temporary table if not exists ods_mysql_knowledge_point (\n    id           bigint not null comment \u0027编号\u0027,\n    point_txt    varchar(4000) null comment \u0027知识点 内容  \u0027,\n    point_level  bigint        null comment \u0027知识点基本\u0027,\n    course_id    bigint        null comment \u0027课程id\u0027,\n    chapter_id   bigint        null comment \u0027章节id\u0027,\n    create_time  timestamp      null comment \u0027创建时间\u0027,\n    update_time  timestamp      null comment \u0027修改时间\u0027,\n    publisher_id bigint        null comment \u0027发布者id\u0027,\n    deleted      varchar(2)    null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027table-name\u0027 \u003d \u0027knowledge_point\u0027\n);\n\ndrop table if exists ods_pm_knowledge_point;\ncreate table if not exists ods_pm_knowledge_point (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_knowledge_point (\n    EXCLUDING ALL\n);\ninsert into ods_pm_knowledge_point\nselect id, point_txt, point_level, course_id, chapter_id, create_time, update_time, publisher_id,\n                             deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_knowledge_point;",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 02:24:06.545",
+      "dateUpdated": "2023-07-16 08:25:16.069",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/7189fd60e13f7b949f5fd8aef18c7be3/chk-1",
@@ -756,7 +799,7 @@
       "title": "Full sync 15 tables(ods_mysql_test_paper)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_test_paper)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_test_paper;\ncreate temporary table if not exists ods_mysql_test_paper (\n    id           bigint not null comment \u0027编号\u0027,\n    paper_title  varchar(200) null comment \u0027试卷名称\u0027,\n    course_id    bigint       null comment \u0027课程id\u0027,\n    create_time  timestamp     null comment \u0027创建时间\u0027,\n    update_time  timestamp     null comment \u0027更新时间\u0027,\n    publisher_id bigint       null comment \u0027发布者id\u0027,\n    deleted      varchar(2)   null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027table-name\u0027 \u003d \u0027test_paper\u0027\n);\n\ndrop table if exists ods_pm_test_paper;\ncreate table if not exists ods_pm_test_paper (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_test_paper (\n    EXCLUDING ALL\n);\ninsert into ods_pm_test_paper\nselect id, paper_title, course_id, create_time, update_time, publisher_id, deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_test_paper;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 02:24:10.057",
+      "dateUpdated": "2023-07-16 08:25:34.740",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/25f58eb69037ff37bc8476dae8f4c2b1/chk-1",
@@ -821,7 +864,7 @@
       "title": "Full sync 15 tables(ods_mysql_test_paper_question)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_test_paper_question)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_test_paper_question;\ncreate temporary table if not exists ods_mysql_test_paper_question (\n    id           bigint not null comment \u0027编号\u0027,\n    paper_id     bigint         null comment \u0027试卷id\u0027,\n    question_id  bigint         null comment \u0027题目id\u0027,\n    score        decimal(10, 2) null comment \u0027得分\u0027,\n    create_time  timestamp       null comment \u0027创建时间\u0027,\n    deleted      varchar(2)     null comment \u0027是否删除\u0027,\n    publisher_id bigint         null comment \u0027发布者id\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n    \u0027table-name\u0027 \u003d \u0027test_paper_question\u0027\n);\n\ndrop table if exists ods_pm_test_paper_question;\ncreate table if not exists ods_pm_test_paper_question (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_test_paper_question (\n    EXCLUDING ALL\n);\ninsert into ods_pm_test_paper_question\nselect id, paper_id, question_id, score, create_time, deleted, publisher_id, date_format(create_time, \u0027yyyy-MM-dd\u0027) dt\n\nfrom ods_mysql_test_paper_question;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 12:42:01.462",
+      "dateUpdated": "2023-07-16 08:25:54.117",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/88c4194ad88770fa71e4f343a014c72e/chk-3",
@@ -886,7 +929,7 @@
       "title": "Full sync 15 tables(ods_mysql_test_point_question)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_test_point_question)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_test_point_question;\ncreate temporary table if not exists ods_mysql_test_point_question (\n    id           bigint not null comment \u0027编号\u0027,\n    point_id     bigint     null comment \u0027知识点 内容  \u0027,\n    question_id  bigint     null comment \u0027知识点基本\u0027,\n    create_time  timestamp   null comment \u0027创建时间\u0027,\n    publisher_id bigint     null comment \u0027发布者id\u0027,\n    deleted      varchar(2) null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n\n    \u0027table-name\u0027 \u003d \u0027test_point_question\u0027\n);\n\ndrop table if exists ods_pm_test_point_question;\ncreate table if not exists ods_pm_test_point_question (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_test_point_question (\n    EXCLUDING ALL\n);\ninsert into ods_pm_test_point_question\nselect id, point_id, question_id, create_time, publisher_id, deleted, date_format(create_time, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_test_point_question;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 13:07:21.447",
+      "dateUpdated": "2023-07-16 08:26:12.959",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/268baadfd494c8181e71120794d8bdbd/chk-2",
@@ -951,7 +994,7 @@
       "title": "Full sync 15 tables(ods_mysql_test_question_info)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_test_question_info)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_test_question_info;\ncreate temporary table if not exists ods_mysql_test_question_info (\n    id            bigint not null comment \u0027编号\u0027,\n    question_txt  varchar(4000) null comment \u0027题目内容\u0027,\n    chapter_id    bigint        null comment \u0027课程id\u0027,\n    course_id     bigint        null comment \u0027视频id\u0027,\n    question_type bigint        null comment \u0027题目类型\u0027,\n    create_time   timestamp      null comment \u0027创建时间\u0027,\n    update_time   timestamp      null comment \u0027更新时间\u0027,\n    publisher_id  bigint        null comment \u0027发布者id\u0027,\n    deleted       varchar(2)    null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n\n    \u0027table-name\u0027 \u003d \u0027test_question_info\u0027\n);\n\ndrop table if exists ods_pm_test_question_info;\ncreate table if not exists ods_pm_test_question_info (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_test_question_info (\n    EXCLUDING ALL\n);\ninsert into ods_pm_test_question_info\nselect id, question_txt, chapter_id, course_id, question_type, create_time, update_time,\n                                publisher_id, deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_test_question_info;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 13:07:13.692",
+      "dateUpdated": "2023-07-16 08:26:29.154",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/94018c8f0378d697df3141bd2e439308/chk-1",
@@ -1016,7 +1059,7 @@
       "title": "Full sync 15 tables(ods_mysql_test_question_option)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_test_question_option)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_test_question_option;\ncreate temporary table if not exists ods_mysql_test_question_option (\n    id          bigint not null comment \u0027编号\u0027,\n    option_txt  varchar(2000) null comment \u0027选项内容\u0027,\n    question_id bigint        null comment \u0027题目id\u0027,\n    is_correct  varchar(2)    null comment \u0027是否正确\u0027,\n    create_time timestamp      null comment \u0027创建时间\u0027,\n    update_time timestamp      null comment \u0027更新时间\u0027,\n    deleted     varchar(2)    null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n\n    \u0027table-name\u0027 \u003d \u0027test_question_option\u0027\n);\n\ndrop table if exists ods_pm_test_question_option;\ncreate table if not exists ods_pm_test_question_option (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_test_question_option (\n    EXCLUDING ALL\n);\ninsert into ods_pm_test_question_option\nselect id, option_txt, question_id, is_correct, create_time, update_time, deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_test_question_option;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 13:07:11.671",
+      "dateUpdated": "2023-07-16 08:26:56.850",
       "progress": 0,
       "config": {
         "tableHide": true,
@@ -1080,7 +1123,7 @@
       "title": "Full sync 15 tables(ods_mysql_user_chapter_process)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_user_chapter_process)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_user_chapter_process;\ncreate temporary table if not exists ods_mysql_user_chapter_process (\n    id           bigint not null comment \u0027编号\u0027,\n    course_id    bigint     null comment \u0027课程id\u0027,\n    chapter_id   bigint     null comment \u0027章节id\u0027,\n    user_id      bigint     null comment \u0027用户id\u0027,\n    position_sec bigint     null comment \u0027时长位置\u0027,\n    create_time  timestamp   null comment \u0027创建时间\u0027,\n    update_time  timestamp   null comment \u0027更新时间\u0027,\n    deleted      varchar(2) null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n\n    \u0027table-name\u0027 \u003d \u0027user_chapter_process\u0027\n);\n\ndrop table if exists ods_pm_user_chapter_process;\ncreate table if not exists ods_pm_user_chapter_process (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_user_chapter_process (\n    EXCLUDING ALL\n);\ninsert into ods_pm_user_chapter_process\nselect id, course_id, chapter_id, user_id, position_sec, create_time, update_time, deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_user_chapter_process;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 13:07:10.088",
+      "dateUpdated": "2023-07-16 08:27:00.214",
       "progress": 0,
       "config": {
         "tableHide": true,
@@ -1092,7 +1135,7 @@
         },
         "colWidth": 12.0,
         "editorMode": "ace/mode/sql",
-        "editorHide": true,
+        "editorHide": false,
         "fontSize": 9.0,
         "title": true,
         "results": {},
@@ -1144,7 +1187,7 @@
       "title": "Full sync 15 tables(ods_mysql_video_info)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync 15 tables(ods_mysql_video_info)\",parallelism\u003d1)\ndrop temporary table if exists ods_mysql_video_info;\ncreate temporary table if not exists ods_mysql_video_info (\n    id              bigint not null comment \u0027编号\u0027,\n    video_name      varchar(200)  null comment \u0027视频名称\u0027,\n    during_sec      bigint        null comment \u0027时长\u0027,\n    video_status    varchar(4000) null comment \u0027状态 未上传，上传中，上传完\u0027,\n    video_size      bigint        null comment \u0027大小\u0027,\n    video_url       varchar(500)  null comment \u0027视频存储路径\u0027,\n    video_source_id varchar(200)  null comment \u0027云端资源编号\u0027,\n    version_id      bigint        null comment \u0027版本号\u0027,\n    chapter_id      bigint        null comment \u0027章节id\u0027,\n    course_id       bigint        null comment \u0027课程id\u0027,\n    publisher_id    bigint        null comment \u0027发布者id\u0027,\n    create_time     timestamp      null comment \u0027创建时间\u0027,\n    update_time     timestamp      null comment \u0027更新时间\u0027,\n    deleted         varchar(2)    null comment \u0027是否删除\u0027,\n    primary key(id) not enforced\n) with (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://mysql:3306/edu?characterEncoding\u003dutf-8\u0026useSSL\u003dfalse\u0026serverTimezone\u003dGMT%2B8\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027mysql123457\u0027,\n\n    \u0027table-name\u0027 \u003d \u0027video_info\u0027\n);\n\ndrop table if exists ods_pm_video_info;\ncreate table if not exists ods_pm_video_info (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_mysql_video_info (\n    EXCLUDING ALL\n);\ninsert into ods_pm_video_info\nselect id, video_name, during_sec, video_status, video_size, video_url, video_source_id, version_id,\n                        chapter_id, course_id, publisher_id, create_time, update_time, deleted, date_format(case when update_time is not null then update_time else create_time end, \u0027yyyy-MM-dd\u0027) dt\nfrom ods_mysql_video_info;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 13:07:08.207",
+      "dateUpdated": "2023-07-16 08:27:12.495",
       "progress": 0,
       "config": {
         "latest_checkpoint_path": "hdfs://namenode:8020/flink-checkpoints/1a90f190914f4c990c6f83a0aef9e463/chk-1",
@@ -1157,7 +1200,7 @@
         },
         "colWidth": 12.0,
         "editorMode": "ace/mode/sql",
-        "editorHide": true,
+        "editorHide": false,
         "fontSize": 9.0,
         "title": true,
         "results": {
@@ -1251,7 +1294,7 @@
       "title": "Full sync ables(ods_log_inc)",
       "text": "%flink.bsql(type\u003dsingle,jobName\u003d\"Full sync tables(ods_log_inc)\",parallelism\u003d1)\ndrop temporary table if exists ods_log_inc;\ncreate temporary table if not exists ods_log_inc (\n    `common`   row\u003car string,sid string,ba string,ch string,is_new string,md string,mid string,os string,uid string,vc string,sc string\u003e COMMENT \u0027公共信息\u0027,\n    `page`     row\u003cduring_time string,item string,item_type string,last_page_id string,page_id string,source_type string\u003e COMMENT \u0027页面信息\u0027,\n    `actions`  array\u003crow\u003caction_id string,item string,item_type string,ts bigint\u003e\u003e COMMENT \u0027动作信息\u0027,\n    `displays` array\u003crow\u003cdisplay_type string,item string,item_type string,`order` string,pos_id string\u003e\u003e COMMENT \u0027曝光信息\u0027,\n    `start`    row\u003centry string,loading_time bigint,open_ad_id bigint,open_ad_ms bigint,open_ad_skip_ms bigint,first_open string\u003e COMMENT \u0027启动信息\u0027,\n    `err` \t   row\u003cerror_code bigint,msg string\u003e COMMENT \u0027错误信息\u0027,\n    `appVideo` row\u003cvideo_id string, position_sec bigint, play_sec bigint\u003e COMMENT \u0027视频播放信息\u0027,\n    ts \t       bigint COMMENT \u0027时间戳\u0027\n) comment \u0027日志增量表\u0027 with (\n    \u0027connector\u0027 \u003d \u0027filesystem\u0027,           -- required: specify the connector\n    \u0027path\u0027 \u003d \u0027hdfs://namenode:8020/data_mocker/\u0027,  -- required: path to a directory\n    \u0027format\u0027 \u003d \u0027json\u0027\n);\n\ndrop table if exists ods_pm_log_inc;\ncreate table if not exists ods_pm_log_inc (dt string null comment \u0027分区时间\u0027)\npartitioned by (dt) with (\n    \u0027changelog-producer\u0027 \u003d \u0027input\u0027,\n    \u0027bucket\u0027 \u003d \u00271\u0027\n) like ods_log_inc (\n    EXCLUDING ALL\n);\ninsert into ods_pm_log_inc\nselect common, page, actions, displays, `start`, err, appVideo, ts, date_format(TIMESTAMPADD(HOUR, 8, TO_TIMESTAMP_LTZ(ts, 3)), \u0027yyyy-MM-dd\u0027) dt\nfrom ods_log_inc;\n",
       "user": "anonymous",
-      "dateUpdated": "2023-06-29 13:00:19.251",
+      "dateUpdated": "2023-07-16 08:27:23.203",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1406,7 +1449,5 @@
   "config": {
     "isZeppelinNotebookCronEnable": false
   },
-  "info": {
-    "isRunning": false
-  }
+  "info": {}
 }
