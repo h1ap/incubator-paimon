@@ -45,9 +45,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.apache.hadoop.hive.metastore.Warehouse.getDnsPath;
-import static org.apache.paimon.hive.HiveTypeUtils.typeInfoToLogicalType;
+import static org.apache.paimon.CoreOptions.METASTORE_PARTITIONED_TABLE;
+import static org.apache.paimon.hive.HiveTypeUtils.toPaimonType;
 
 /**
  * {@link HiveMetaHook} for paimon. Currently this class is only used to set input and output
@@ -66,12 +68,6 @@ public class PaimonMetaHook implements HiveMetaHook {
 
     @Override
     public void preCreateTable(Table table) throws MetaException {
-        if (table.getPartitionKeysSize() != 0) {
-            throw new MetaException(
-                    "Paimon currently does not support creating partitioned table "
-                            + "with PARTITIONED BY clause. If you want to create a partitioned table, "
-                            + "please set partition fields in properties.");
-        }
 
         // hive ql parse cannot recognize input near '$' in table name, no need to add paimon system
         // table verification.
@@ -107,16 +103,37 @@ public class PaimonMetaHook implements HiveMetaHook {
         // create paimon table
         List<FieldSchema> cols = table.getSd().getCols();
         Schema.Builder schemaBuilder =
-                Schema.newBuilder()
-                        .options(context.options().toMap())
-                        .comment(table.getParameters().get(COMMENT));
+                Schema.newBuilder().comment(table.getParameters().get(COMMENT));
         cols.iterator()
                 .forEachRemaining(
                         fieldSchema ->
                                 schemaBuilder.column(
                                         fieldSchema.getName().toLowerCase(),
-                                        typeInfoToLogicalType(fieldSchema.getType()),
+                                        toPaimonType(fieldSchema.getType()),
                                         fieldSchema.getComment()));
+        // partition columns
+        if (table.getPartitionKeysSize() > 0) {
+            // set metastore.partitioned-table = true
+            context.options().set(METASTORE_PARTITIONED_TABLE, true);
+
+            table.getPartitionKeys()
+                    .iterator()
+                    .forEachRemaining(
+                            fieldSchema ->
+                                    schemaBuilder.column(
+                                            fieldSchema.getName().toLowerCase(),
+                                            toPaimonType(fieldSchema.getType()),
+                                            fieldSchema.getComment()));
+
+            List<String> partitionKeys =
+                    table.getPartitionKeys().stream()
+                            .map(FieldSchema::getName)
+                            .map(String::toLowerCase)
+                            .collect(Collectors.toList());
+            schemaBuilder.partitionKeys(partitionKeys);
+        }
+        schemaBuilder.options(context.options().toMap());
+
         try {
             schemaManager.createTable(schemaBuilder.build());
         } catch (Exception e) {
