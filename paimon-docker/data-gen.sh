@@ -10,23 +10,25 @@ fi
 
 docker_compose_file=$1
 
-echo "start paimon-docker: $docker_compose_file env..."
-docker-compose -f $docker_compose_file up -d
-sleep 5s
+#echo "start paimon-docker: $docker_compose_file env..."
+# docker-compose -f $docker_compose_file up -d
+#sleep 5s
 
 config_path='./data_mocker/application.yml'
 
-for i in {1..6} ; do
+for i in {1..1000} ; do
     if [ $i != 1 ]; then
         echo "exec datagen..."
-        docker-compose -f $docker_compose_file start datagen
+        docker-compose -f "$docker_compose_file" start datagen
     fi
-    datagen_status=$(docker-compose -f $docker_compose_file ps -a datagen | awk 'NR==2')
+    datagen_status=$(docker-compose -f "$docker_compose_file" ps -a datagen | awk 'NR==2')
     echo "生成数据，日期：$date_str"
+    echo "$datagen_status"
     while [[ $datagen_status != *"Exited"* ]]; do
-      datagen_status=$(docker-compose -f $docker_compose_file ps -a datagen | awk 'NR==2')
+      datagen_status=$(docker-compose -f "$docker_compose_file" ps -a datagen | awk 'NR==2')
+      echo "$datagen_status"
       echo "wait datagen..."
-      sleep 1
+      sleep 2
     done
     echo "生成完毕，日期：$date_str"
     sleep 2
@@ -37,6 +39,3 @@ for i in {1..6} ; do
       sed -i "s/mock.date: \"[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\"/mock.date: \"$(date -d +"$i days ago" +%Y-%m-%d)\"/g" ./data_mocker/application.yml
     fi
 done
-
-docker-compose -f $docker_compose_file exec datanode1 bash /opt/copy_log.sh
-echo "copy app.log to hdfs..."

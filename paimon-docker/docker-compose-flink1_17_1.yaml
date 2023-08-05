@@ -14,18 +14,19 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        jobmanager.memory.process.size: 4096m
-        taskmanager.memory.process.size: 2048m
-        taskmanager.numberOfTaskSlots: 2
+        jobmanager.memory.process.size: 8192m
+        taskmanager.memory.process.size: 8192m
+        taskmanager.numberOfTaskSlots: 6
         parallelism.default: 1
+        execution.checkpointing.unaligned.enabled: true
         state.backend: rocksdb
-        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
-        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+        state.checkpoints.dir: file:///opt/flink/flink-checkpoints
+        state.savepoints.dir: file:///opt/flink/flink-savepoints
         state.backend.incremental: true
-        execution.checkpointing.interval: 60000
+        execution.checkpointing.interval: 180000
         taskmanager.network.blocking-shuffle.type: mmap
         taskmanager.network.blocking-shuffle.compression.enabled: true
-        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+        jobmanager.archive.fs.dir: file:///opt/flink/completed-jobs
         cluster.evenly-spread-out-slots: true
         heartbeat.timeout: 180000
         akka.framesize: 251658240b
@@ -51,17 +52,18 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        jobmanager.memory.process.size: 4096m
-        taskmanager.memory.process.size: 2048m
-        taskmanager.numberOfTaskSlots: 2
+        jobmanager.memory.process.size: 8192m
+        taskmanager.memory.process.size: 8192m
+        taskmanager.numberOfTaskSlots: 6
+        execution.checkpointing.unaligned.enabled: true
         state.backend: rocksdb
-        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
-        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+        state.checkpoints.dir: file:///opt/flink/flink-checkpoints
+        state.savepoints.dir: file:///opt/flink/flink-savepoints
         state.backend.incremental: true
-        execution.checkpointing.interval: 60000
+        execution.checkpointing.interval: 180000
         taskmanager.network.blocking-shuffle.type: mmap
         taskmanager.network.blocking-shuffle.compression.enabled: true
-        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+        jobmanager.archive.fs.dir: file:///opt/flink/completed-jobs
         cluster.evenly-spread-out-slots: true
         heartbeat.timeout: 180000
         akka.framesize: 251658240b
@@ -87,96 +89,99 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        jobmanager.memory.process.size: 4096m
-        taskmanager.memory.process.size: 2048m
-        taskmanager.numberOfTaskSlots: 2
-        parallelism.default: 2
+        jobmanager.memory.process.size: 8192m
+        taskmanager.memory.process.size: 8192m
+        taskmanager.numberOfTaskSlots: 6
+        parallelism.default: 1
+        execution.checkpointing.unaligned.enabled: true
         state.backend: rocksdb
-        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
-        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+        state.checkpoints.dir: file:///opt/flink/flink-checkpoints
+        state.savepoints.dir: file:///opt/flink/flink-savepoints
         state.backend.incremental: true
-        execution.checkpointing.interval: 60000
+        execution.checkpointing.interval: 180000
         taskmanager.network.blocking-shuffle.type: mmap
         taskmanager.network.blocking-shuffle.compression.enabled: true
-        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+        jobmanager.archive.fs.dir: file:///opt/flink/completed-jobs
         cluster.evenly-spread-out-slots: true
         heartbeat.timeout: 180000
         akka.framesize: 251658240b
         classloader.check-leaked-classloader: false
 
-  flink_cluster_tm3:
-    image: flink:1.17.1-scala_2.12
-    command: taskmanager
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: "1.00"
-#          memory: 1G
-#        reservations:
-#          memory: 128M
-    volumes:
-      - ./flink-1.17.1/lib:/opt/flink/lib
-      - ./state:/opt/flink/state
-      - ./jobs-archive:/opt/flink/jobs-archive
-    depends_on:
-      - jobmanager
-    environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        jobmanager.memory.process.size: 4096m
-        taskmanager.memory.process.size: 2048m
-        taskmanager.numberOfTaskSlots: 2
-        parallelism.default: 2
-        state.backend: rocksdb
-        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
-        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
-        state.backend.incremental: true
-        execution.checkpointing.interval: 60000
-        taskmanager.network.blocking-shuffle.type: mmap
-        taskmanager.network.blocking-shuffle.compression.enabled: true
-        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
-        cluster.evenly-spread-out-slots: true
-        heartbeat.timeout: 180000
-        akka.framesize: 251658240b
-        classloader.check-leaked-classloader: false
+#  flink_cluster_tm3:
+#    image: flink:1.17.1-scala_2.12
+#    command: taskmanager
+##    deploy:
+##      resources:
+##        limits:
+##          cpus: "1.00"
+##          memory: 1G
+##        reservations:
+##          memory: 128M
+#    volumes:
+#      - ./flink-1.17.1/lib:/opt/flink/lib
+#      - ./state:/opt/flink/state
+#      - ./jobs-archive:/opt/flink/jobs-archive
+#    depends_on:
+#      - jobmanager
+#    environment:
+#      - |
+#        FLINK_PROPERTIES=
+#        jobmanager.rpc.address: jobmanager
+#        jobmanager.memory.process.size: 4096m
+#        taskmanager.memory.process.size: 4096m
+#        taskmanager.numberOfTaskSlots: 2
+#        parallelism.default: 1
+#        execution.checkpointing.unaligned.enabled: true
+#        state.backend: rocksdb
+#        state.checkpoints.dir: file:///opt/flink/flink-checkpoints
+#        state.savepoints.dir: file:///opt/flink/flink-savepoints
+#        state.backend.incremental: true
+#        execution.checkpointing.interval: 180000
+#        taskmanager.network.blocking-shuffle.type: mmap
+#        taskmanager.network.blocking-shuffle.compression.enabled: true
+#        jobmanager.archive.fs.dir: file:///opt/flink/completed-jobs
+#        cluster.evenly-spread-out-slots: true
+#        heartbeat.timeout: 180000
+#        akka.framesize: 251658240b
+#        classloader.check-leaked-classloader: false
 
-  flink_cluster_tm4:
-    image: flink:1.17.1-scala_2.12
-    command: taskmanager
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: "1.00"
-#          memory: 1G
-#        reservations:
-#          memory: 128M
-    volumes:
-      - ./flink-1.17.1/lib:/opt/flink/lib
-      - ./state:/opt/flink/state
-      - ./jobs-archive:/opt/flink/jobs-archive
-    depends_on:
-      - jobmanager
-    environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        jobmanager.memory.process.size: 4096m
-        taskmanager.memory.process.size: 2048m
-        taskmanager.numberOfTaskSlots: 2
-        parallelism.default: 2
-        state.backend: rocksdb
-        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
-        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
-        state.backend.incremental: true
-        execution.checkpointing.interval: 60000
-        taskmanager.network.blocking-shuffle.type: mmap
-        taskmanager.network.blocking-shuffle.compression.enabled: true
-        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
-        cluster.evenly-spread-out-slots: true
-        heartbeat.timeout: 180000
-        akka.framesize: 251658240b
-        classloader.check-leaked-classloader: false
+#  flink_cluster_tm4:
+#    image: flink:1.17.1-scala_2.12
+#    command: taskmanager
+##    deploy:
+##      resources:
+##        limits:
+##          cpus: "1.00"
+##          memory: 1G
+##        reservations:
+##          memory: 128M
+#    volumes:
+#      - ./flink-1.17.1/lib:/opt/flink/lib
+#      - ./state:/opt/flink/state
+#      - ./jobs-archive:/opt/flink/jobs-archive
+#    depends_on:
+#      - jobmanager
+#    environment:
+#      - |
+#        FLINK_PROPERTIES=
+#        jobmanager.rpc.address: jobmanager
+#        jobmanager.memory.process.size: 4096m
+#        taskmanager.memory.process.size: 4096m
+#        taskmanager.numberOfTaskSlots: 2
+#        parallelism.default: 1
+#        execution.checkpointing.unaligned.enabled: true
+#        state.backend: rocksdb
+#        state.checkpoints.dir: file:///opt/flink/flink-checkpoints
+#        state.savepoints.dir: file:///opt/flink/flink-savepoints
+#        state.backend.incremental: true
+#        execution.checkpointing.interval: 180000
+#        taskmanager.network.blocking-shuffle.type: mmap
+#        taskmanager.network.blocking-shuffle.compression.enabled: true
+#        jobmanager.archive.fs.dir: file:///opt/flink/completed-jobs
+#        cluster.evenly-spread-out-slots: true
+#        heartbeat.timeout: 180000
+#        akka.framesize: 251658240b
+#        classloader.check-leaked-classloader: false
 
   namenode:
     image: heap/hudi-hadoop_2.10.1-namenode:latest
@@ -376,17 +381,17 @@ services:
   #        FLINK_PROPERTIES=
   #        jobmanager.rpc.address: jobmanager
   #        jobmanager.memory.process.size: 4096m
-  #        taskmanager.memory.process.size: 2048m
+  #        taskmanager.memory.process.size: 4096m
   #        taskmanager.numberOfTaskSlots: 4
   #        parallelism.default: 4
   #        state.backend: rocksdb
-  #        state.checkpoints.dir: hdfs://namenode:8020/flink-checkpoints
-  #        state.savepoints.dir: hdfs://namenode:8020/flink-savepoints
+  #        state.checkpoints.dir: file:///opt/flink/flink-checkpoints
+  #        state.savepoints.dir: file:///opt/flink/flink-savepoints
   #        state.backend.incremental: true
-  #        execution.checkpointing.interval: 60000
+  #        execution.checkpointing.interval: 180000
   #        taskmanager.network.blocking-shuffle.type: mmap
   #        taskmanager.network.blocking-shuffle.compression.enabled: true
-  #        jobmanager.archive.fs.dir: hdfs://namenode:8020/completed-jobs
+  #        jobmanager.archive.fs.dir: file:///opt/flink/completed-jobs
   #        cluster.evenly-spread-out-slots: true
   #        heartbeat.timeout: 180000
   #        akka.framesize: 251658240b
