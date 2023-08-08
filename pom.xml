@@ -52,6 +52,7 @@ under the License.
     </scm>
 
     <modules>
+        <module>paimon-source-analysis</module>
         <module>paimon-benchmark</module>
         <module>paimon-codegen</module>
         <module>paimon-codegen-loader</module>
@@ -398,6 +399,8 @@ under the License.
                         <exclude>release/**</exclude>
                         <!-- antlr grammar files -->
                         <exclude>paimon-common/src/main/antlr4/**</exclude>
+                        <!-- source-analysis -->
+                        <exclude>**/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

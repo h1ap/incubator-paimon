@@ -149,27 +149,6 @@ public class HiveTableSchemaTest {
     }
 
     @Test
-    public void testTooFewColumns() throws Exception {
-        createSchema();
-
-        Properties properties = new Properties();
-        properties.setProperty("columns", "a");
-        properties.setProperty("columns.types", TypeInfoFactory.intTypeInfo.getTypeName());
-        properties.setProperty("location", tempDir.toString());
-        properties.setProperty("columns.comments", "");
-
-        String expected =
-                "Hive DDL and paimon schema mismatched! "
-                        + "It is recommended not to write any column definition "
-                        + "as Paimon external table can read schema from the specified location.\n"
-                        + "There are 1 fields in Hive DDL: a\n"
-                        + "There are 3 fields in Paimon schema: a, b, c";
-        assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> HiveSchema.extract(null, properties))
-                .withMessageContaining(expected);
-    }
-
-    @Test
     public void testTooManyColumns() throws Exception {
         createSchema();
 
@@ -193,6 +172,27 @@ public class HiveTableSchemaTest {
                         + "It is recommended not to write any column definition "
                         + "as Paimon external table can read schema from the specified location.\n"
                         + "There are 5 fields in Hive DDL: a, b, c, d, e\n"
+                        + "There are 3 fields in Paimon schema: a, b, c";
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> HiveSchema.extract(null, properties))
+                .withMessageContaining(expected);
+    }
+
+    @Test
+    public void testTooFewColumns() throws Exception {
+        createSchema();
+
+        Properties properties = new Properties();
+        properties.setProperty("columns", "a");
+        properties.setProperty("columns.types", TypeInfoFactory.intTypeInfo.getTypeName());
+        properties.setProperty("location", tempDir.toString());
+        properties.setProperty("columns.comments", "");
+
+        String expected =
+                "Hive DDL and paimon schema mismatched! "
+                        + "It is recommended not to write any column definition "
+                        + "as Paimon external table can read schema from the specified location.\n"
+                        + "There are 1 fields in Hive DDL: a\n"
                         + "There are 3 fields in Paimon schema: a, b, c";
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> HiveSchema.extract(null, properties))
