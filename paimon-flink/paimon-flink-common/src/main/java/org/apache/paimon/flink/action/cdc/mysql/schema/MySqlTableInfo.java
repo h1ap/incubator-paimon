@@ -16,22 +16,25 @@
  * limitations under the License.
  */
 
-package org.apache.paimon.format.orc;
+package org.apache.paimon.flink.action.cdc.mysql.schema;
 
-import org.apache.paimon.format.FileFormat;
-import org.apache.paimon.format.FileFormatFactory;
-import org.apache.paimon.format.FormatReadWriteTest;
-import org.apache.paimon.options.Options;
+import org.apache.paimon.catalog.Identifier;
 
-/** An orc {@link FormatReadWriteTest}. */
-public class OrcFormatReadWriteTest extends FormatReadWriteTest {
+import java.util.List;
 
-    protected OrcFormatReadWriteTest() {
-        super("orc");
-    }
+/** Describe a MySQL table. */
+public interface MySqlTableInfo {
 
-    @Override
-    protected FileFormat fileFormat() {
-        return new OrcFileFormat(new FileFormatFactory.FormatContext(new Options(), 1024));
-    }
+    /** To indicate where is the table from. */
+    String location();
+
+    /** Return all MySQL table identifiers that build this schema. */
+    List<Identifier> identifiers();
+
+    String tableName();
+
+    /** Convert to corresponding Paimon table name. */
+    String toPaimonTableName();
+
+    MySqlSchema schema();
 }
