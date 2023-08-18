@@ -52,6 +52,9 @@ CREATE TABLE schema_evolution_multiple (
 CREATE TABLE all_types_table (
     _id INT,
     pt DECIMAL(2, 1),
+    -- BIT
+    _bit1 BIT,
+    _bit BIT(64),
     -- TINYINT
     _tinyint1 TINYINT(1),
     _boolean BOOLEAN,
@@ -152,6 +155,8 @@ CREATE TABLE all_types_table (
 
 INSERT INTO all_types_table VALUES (
     1, 1.1,
+    -- BIT
+    1, B'11111000111',
     -- TINYINT
     true, true, false, 1, 2, 3,
     -- SMALLINT
@@ -207,6 +212,7 @@ INSERT INTO all_types_table VALUES (
     'a,b'
 ), (
     2, 2.2,
+    NULL, NULL,
     NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL,
     NULL, NULL, NULL,
@@ -274,25 +280,14 @@ CREATE TABLE test_computed_column (
     PRIMARY KEY (pk)
 );
 
+-- ################################################################################
+--  testTinyInt1Convert
+-- ################################################################################
+
 CREATE TABLE test_tinyint1_convert (
     pk INT,
-    _datetime DATETIME,
     _tinyint1 TINYINT(1),
     PRIMARY KEY (pk)
-);
-
--- ################################################################################
---  testSchemaEvolutionWithTinyint1Convert
--- ################################################################################
-
-CREATE DATABASE paimon_sync_table_tinyint;
-USE paimon_sync_table_tinyint;
-
-CREATE TABLE schema_evolution_3 (
-    pt INT comment  'primary',
-    _id INT comment  '_id',
-    v1 VARCHAR(10) comment  'v1',
-    PRIMARY KEY (_id)
 );
 
 -- ################################################################################
