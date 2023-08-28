@@ -23,9 +23,7 @@ import org.apache.paimon.types.DataType;
 import org.apache.paimon.types.DataTypes;
 import org.apache.paimon.types.RowType;
 
-import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.core.execution.JobClient;
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -38,23 +36,20 @@ import java.util.Map;
 public class MongoDBSyncDatabaseActionITCase extends MongoDBActionITCaseBase {
 
     @Test
-    @Timeout(120)
+    @Timeout(60)
     public void testSchemaEvolution() throws Exception {
         writeRecordsToMongoDB("test-data-1", database, "database");
         writeRecordsToMongoDB("test-data-2", database, "database");
 
         Map<String, String> mongodbConfig = getBasicMongoDBConfig();
         mongodbConfig.put("database", database);
-
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
-        env.enableCheckpointing(1000);
-        env.setRestartStrategy(RestartStrategies.noRestart());
-
-        Map<String, String> tableConfig = getBasicTableConfig();
         MongoDBSyncDatabaseAction action =
                 new MongoDBSyncDatabaseAction(
-                        mongodbConfig, warehouse, database, Collections.emptyMap(), tableConfig);
+                        mongodbConfig,
+                        warehouse,
+                        database,
+                        Collections.emptyMap(),
+                        getBasicTableConfig());
         action.build(env);
         JobClient client = env.executeAsync();
         waitJobRunning(client);
