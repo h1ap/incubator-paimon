@@ -1,10 +1,13 @@
 package sourcecode.analysis;
 
+import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.table.api.DataTypes;
 import org.apache.flink.table.api.Schema;
 import org.apache.flink.table.api.Table;
+import org.apache.flink.table.api.TableResult;
 import org.apache.flink.table.types.DataType;
 import org.apache.flink.types.Row;
 import org.junit.jupiter.api.AfterEach;
@@ -53,7 +56,7 @@ public class WriteToTable {
                                 + "(pk INT, name STRING, age INT, dt INT, primary key(pk, dt) not enforced)"
                                 + "partitioned by (dt) with (\n"
                                 + "    'changelog-producer' = 'input',\n"
-                                + "    'merge-engine'='partial-update',\n"
+                                + "    'merge-engine'='deduplicate',\n"
                                 + "    'bucket' = '1'\n"
                                 + ")",
                         table));
@@ -65,7 +68,7 @@ public class WriteToTable {
     }
 
     @Test
-    public void streamNetcatWriteTo() throws ExecutionException, InterruptedException {
+    public void streamNetcatWriteTo() throws Exception {
         StreamEnv streamEnv = new StreamEnv(basePath);
         // create paimon catalog
         streamEnv.tableEnv.executeSql(
@@ -75,16 +78,19 @@ public class WriteToTable {
         streamEnv.tableEnv.executeSql("USE CATALOG paimon");
 
         // register the table under a name and perform an aggregation
-
-        DataStream<TestEntity> source = streamEnv.senv.socketTextStream("localhost", 9527)
+        DataStream<Row> source = streamEnv.senv.socketTextStream("localhost", 9527)
                 .map(e -> {
                     String[] arr = e.split(",");
                     Integer pk = Integer.parseInt(arr[0]);
                     String name = arr[1];
                     Integer age = Integer.parseInt(arr[2]);
                     Integer dt = Integer.parseInt(arr[3]);
-                    return new TestEntity(pk, name, age, dt);
-                });
+                    return Row.of(pk, name, age, dt);
+                })
+                .returns(Types.ROW_NAMED(
+                        new String[]{"pk", "name", "age", "dt"},
+                        Types.INT, Types.STRING, Types.INT, Types.INT
+                ));
         // create paimon table
         streamEnv.tableEnv.executeSql(
                 String.format(
@@ -92,7 +98,7 @@ public class WriteToTable {
                                 + "(pk INT, name STRING, age INT, dt INT, primary key(pk, dt) not enforced)"
                                 + "partitioned by (dt) with (\n"
                                 + "    'changelog-producer' = 'input',\n"
-                                + "    'merge-engine'='partial-update',\n"
+                                + "    'merge-engine'='deduplicate',\n"
                                 + "    'bucket' = '1'\n"
                                 + ")",
                         table));
@@ -104,15 +110,12 @@ public class WriteToTable {
                 DataTypes.FIELD("dt", DataTypes.INT()));
         Schema schema = Schema.newBuilder().fromRowDataType(row).build();
         // Schema schema = Schema.newBuilder().build();
-        // Schema schema = Schema.newBuilder()
-        //         .column("f0", DataTypes.of(TestEntity.class))
-        //         .build();
 
-        Table tableSource = streamEnv.tableEnv.fromDataStream(source);
+        Table tableSource = streamEnv.tableEnv.fromDataStream(source, schema);
 
         streamEnv.tableEnv.createTemporaryView("input_table", tableSource);
 
-        // insert into paimon table from your data stream table
+        // // insert into paimon table from your data stream table
         streamEnv.tableEnv
                 .executeSql(String.format("INSERT INTO %s SELECT * FROM input_table", table))
                 .await();
@@ -147,7 +150,7 @@ public class WriteToTable {
                                 + "(pk INT, name STRING, age INT, dt INT, primary key(pk, dt) not enforced)"
                                 + "partitioned by (dt) with (\n"
                                 + "    'changelog-producer' = 'input',\n"
-                                + "    'merge-engine'='partial-update',\n"
+                                + "    'merge-engine'='deduplicate',\n"
                                 + "    'bucket' = '1'\n"
                                 + ")",
                         table));
@@ -169,13 +172,25 @@ public class WriteToTable {
                         basePath));
         streamEnv.tableEnv.executeSql("USE CATALOG paimon");
 
+        streamEnv.tableEnv.executeSql(
+                String.format(
+                        "CREATE TABLE IF NOT EXISTS %s "
+                                + "(pk INT, name STRING, age INT, dt INT, primary key(pk, dt) not enforced)"
+                                + "partitioned by (dt) with (\n"
+                                + "    'changelog-producer' = 'input',\n"
+                                + "    'merge-engine'='deduplicate',\n"
+                                + "    'bucket' = '1'\n"
+                                + ")",
+                        table));
+
         // convert to DataStream
-        Table result = streamEnv.tableEnv.sqlQuery(String.format("SELECT * FROM %s", table));
+        TableResult tableResult = streamEnv.tableEnv.executeSql(String.format("SELECT * FROM %s ", table));
 
-        DataStream<Row> dataStream = streamEnv.tableEnv.toChangelogStream(result);
+        tableResult.print();
+
+        // DataStream<Row> dataStream = streamEnv.tableEnv.toChangelogStream(result);
         // use this datastream
-        dataStream.executeAndCollect().forEachRemaining(System.out::println);
-
+        // dataStream.executeAndCollect().forEachRemaining(System.out::println);
         // prints:
         // +I[Bob, 12]
         // +I[Alice, 12]
@@ -201,7 +216,7 @@ public class WriteToTable {
                                 + "(pk INT, name STRING, age INT, dt INT, primary key(pk, dt) not enforced)"
                                 + "partitioned by (dt) with (\n"
                                 + "    'changelog-producer' = 'input',\n"
-                                + "    'merge-engine'='partial-update',\n"
+                                + "    'merge-engine'='deduplicate',\n"
                                 + "    'bucket' = '1'\n"
                                 + ")",
                         table));

@@ -1,10 +1,10 @@
 package sourcecode.analysis;
 
 public class TestEntity {
-    private Integer pk;
-    private String name;
-    private Integer age;
-    private Integer dt;
+    public Integer pk;
+    public String name;
+    public Integer age;
+    public Integer dt;
 
     public TestEntity(Integer pk, String name, Integer age, Integer dt) {
         this.pk = pk;
@@ -43,5 +43,15 @@ public class TestEntity {
 
     public void setDt(Integer dt) {
         this.dt = dt;
+    }
+
+    @Override
+    public String toString() {
+        return "TestEntity{" +
+                "pk=" + pk +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", dt=" + dt +
+                '}';
     }
 }

@@ -64,11 +64,13 @@
     <Loggers>
         <!--AsyncLogger-->
         <AsyncLogger name="org.apache" level="INFO" includeLocation="true"/>
+        <AsyncLogger name="sourcecode.analysis" level="INFO" includeLocation="true"/>
         <!--AsyncRoot-->
         <AsyncRoot level="INFO" includeLocation="true">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="REWRITE"/>
             <appender-ref ref="ERROR_LOG"/>
         </AsyncRoot>
+
     </Loggers>
 </Configuration>
