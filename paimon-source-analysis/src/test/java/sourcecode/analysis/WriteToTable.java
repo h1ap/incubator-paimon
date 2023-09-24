@@ -2,16 +2,12 @@ package sourcecode.analysis;
 
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSink;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.table.api.DataTypes;
 import org.apache.flink.table.api.Schema;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableResult;
 import org.apache.flink.table.types.DataType;
 import org.apache.flink.types.Row;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ExecutionException;
@@ -22,7 +18,9 @@ import static org.apache.flink.table.api.Expressions.row;
 public class WriteToTable {
 
     //
-    private static final String basePath = "/d:/incubator-paimon/paimon-source-analysis";
+    // private static final String basePath = "/d:/incubator-paimon/paimon-source-analysis";
+    private static final String basePath =
+            "/Users/heap/Developer/code/incubator-paimon/paimon-source-analysis/src/test/resources";
     //
     private static final String table = "sink_paimon_table";
 
@@ -70,6 +68,7 @@ public class WriteToTable {
     @Test
     public void streamNetcatWriteTo() throws Exception {
         StreamEnv streamEnv = new StreamEnv(basePath);
+        System.out.printf("");
         // create paimon catalog
         streamEnv.tableEnv.executeSql(
                 String.format(
@@ -78,19 +77,26 @@ public class WriteToTable {
         streamEnv.tableEnv.executeSql("USE CATALOG paimon");
 
         // register the table under a name and perform an aggregation
-        DataStream<Row> source = streamEnv.senv.socketTextStream("localhost", 9527)
-                .map(e -> {
-                    String[] arr = e.split(",");
-                    Integer pk = Integer.parseInt(arr[0]);
-                    String name = arr[1];
-                    Integer age = Integer.parseInt(arr[2]);
-                    Integer dt = Integer.parseInt(arr[3]);
-                    return Row.of(pk, name, age, dt);
-                })
-                .returns(Types.ROW_NAMED(
-                        new String[]{"pk", "name", "age", "dt"},
-                        Types.INT, Types.STRING, Types.INT, Types.INT
-                ));
+        DataStream<Row> source =
+                streamEnv
+                        .senv
+                        .socketTextStream("localhost", 9527)
+                        .map(
+                                e -> {
+                                    String[] arr = e.split(",");
+                                    Integer pk = Integer.parseInt(arr[0]);
+                                    String name = arr[1];
+                                    Integer age = Integer.parseInt(arr[2]);
+                                    Integer dt = Integer.parseInt(arr[3]);
+                                    return Row.of(pk, name, age, dt);
+                                })
+                        .returns(
+                                Types.ROW_NAMED(
+                                        new String[] {"pk", "name", "age", "dt"},
+                                        Types.INT,
+                                        Types.STRING,
+                                        Types.INT,
+                                        Types.INT));
         // create paimon table
         streamEnv.tableEnv.executeSql(
                 String.format(
@@ -103,11 +109,12 @@ public class WriteToTable {
                                 + ")",
                         table));
         // insert into paimon table from your data stream table
-        DataType row = DataTypes.ROW(
-                DataTypes.FIELD("pk", DataTypes.INT()),
-                DataTypes.FIELD("name", DataTypes.STRING()),
-                DataTypes.FIELD("age", DataTypes.INT()),
-                DataTypes.FIELD("dt", DataTypes.INT()));
+        DataType row =
+                DataTypes.ROW(
+                        DataTypes.FIELD("pk", DataTypes.INT()),
+                        DataTypes.FIELD("name", DataTypes.STRING()),
+                        DataTypes.FIELD("age", DataTypes.INT()),
+                        DataTypes.FIELD("dt", DataTypes.INT()));
         Schema schema = Schema.newBuilder().fromRowDataType(row).build();
         // Schema schema = Schema.newBuilder().build();
 
@@ -116,7 +123,8 @@ public class WriteToTable {
         streamEnv.tableEnv.createTemporaryView("input_table", tableSource);
 
         // // insert into paimon table from your data stream table
-        streamEnv.tableEnv
+        streamEnv
+                .tableEnv
                 .executeSql(String.format("INSERT INTO %s SELECT * FROM input_table", table))
                 .await();
     }
@@ -164,7 +172,7 @@ public class WriteToTable {
     public void streamReadFrom() throws Exception {
         // create environments of both APIs
         StreamEnv streamEnv = new StreamEnv(basePath);
-
+        System.out.printf("");
         // create paimon catalog
         streamEnv.tableEnv.executeSql(
                 String.format(
@@ -184,7 +192,8 @@ public class WriteToTable {
                         table));
 
         // convert to DataStream
-        TableResult tableResult = streamEnv.tableEnv.executeSql(String.format("SELECT * FROM %s ", table));
+        TableResult tableResult =
+                streamEnv.tableEnv.executeSql(String.format("SELECT * FROM %s ", table));
 
         tableResult.print();
 

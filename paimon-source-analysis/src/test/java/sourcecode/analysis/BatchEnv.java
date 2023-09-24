@@ -21,7 +21,7 @@ public class BatchEnv {
     public BatchEnv() {
         Configuration cfg = new Configuration();
         int port = RandomUtils.nextInt(8000, 8999);
-        LOG.info("current flink cluster port: {}", port);
+        System.out.printf("current flink cluster port: {%s}", port);
         cfg.set(RestOptions.PORT, port);
         this.senv = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(cfg);
         int parallel = 1;

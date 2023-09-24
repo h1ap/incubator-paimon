@@ -12,15 +12,12 @@ import org.apache.flink.streaming.api.environment.ExecutionCheckpointingOptions;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.EnvironmentSettings;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
-import org.apache.paimon.disk.ExternalBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-/**
- *
- */
+/** */
 public class StreamEnv {
 
     private static final Logger LOG = LoggerFactory.getLogger(StreamEnv.class);
@@ -30,7 +27,9 @@ public class StreamEnv {
     public StreamEnv(String path) {
         Configuration cfg = new Configuration();
         int port = RandomUtils.nextInt(8000, 8999);
-        LOG.info("current flink cluster port: {}", port);
+
+        System.out.printf("current flink cluster port: {%s}", port);
+        cfg.set(RestOptions.ADDRESS, "localhost");
         cfg.set(RestOptions.PORT, port);
         this.senv = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(cfg);
         int parallel = 1;
@@ -50,9 +49,12 @@ public class StreamEnv {
         // env.setRuntimeMode(RuntimeExecutionMode.BATCH);
         this.tableEnv = StreamTableEnvironment.create(senv, settings);
 
-        this.tableEnv.getConfig()
+        this.tableEnv
+                .getConfig()
                 .getConfiguration()
-                .set(ExecutionCheckpointingOptions.CHECKPOINTING_MODE, CheckpointingMode.EXACTLY_ONCE)
+                .set(
+                        ExecutionCheckpointingOptions.CHECKPOINTING_MODE,
+                        CheckpointingMode.EXACTLY_ONCE)
                 .set(ExecutionCheckpointingOptions.CHECKPOINTING_INTERVAL, Duration.ofSeconds(cp))
                 .set(CoreOptions.DEFAULT_PARALLELISM, parallel);
     }

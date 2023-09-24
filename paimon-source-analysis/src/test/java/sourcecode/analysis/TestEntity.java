@@ -1,5 +1,6 @@
 package sourcecode.analysis;
 
+/** */
 public class TestEntity {
     public Integer pk;
     public String name;
@@ -47,11 +48,16 @@ public class TestEntity {
 
     @Override
     public String toString() {
-        return "TestEntity{" +
-                "pk=" + pk +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", dt=" + dt +
-                '}';
+        return "TestEntity{"
+                + "pk="
+                + pk
+                + ", name='"
+                + name
+                + '\''
+                + ", age="
+                + age
+                + ", dt="
+                + dt
+                + '}';
     }
 }
