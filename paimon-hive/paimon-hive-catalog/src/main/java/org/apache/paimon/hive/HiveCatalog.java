@@ -27,6 +27,7 @@ import org.apache.paimon.fs.FileIO;
 import org.apache.paimon.fs.Path;
 import org.apache.paimon.metastore.MetastoreClient;
 import org.apache.paimon.operation.Lock;
+import org.apache.paimon.options.Options;
 import org.apache.paimon.options.OptionsUtils;
 import org.apache.paimon.schema.Schema;
 import org.apache.paimon.schema.SchemaChange;
@@ -39,10 +40,7 @@ import org.apache.paimon.types.DataTypes;
 import org.apache.flink.table.hive.LegacyHiveClasses;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.conf.HiveConf;
-import org.apache.hadoop.hive.metastore.HiveMetaHookLoader;
-import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.metastore.IMetaStoreClient;
-import org.apache.hadoop.hive.metastore.RetryingMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.Database;
 import org.apache.hadoop.hive.metastore.api.FieldSchema;
 import org.apache.hadoop.hive.metastore.api.NoSuchObjectException;
@@ -60,9 +58,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,7 +67,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -109,14 +104,14 @@ public class HiveCatalog extends AbstractCatalog {
     private final LocationHelper locationHelper;
 
     public HiveCatalog(FileIO fileIO, HiveConf hiveConf, String clientClassName, String warehouse) {
-        this(fileIO, hiveConf, clientClassName, Collections.emptyMap(), warehouse);
+        this(fileIO, hiveConf, clientClassName, new Options(), warehouse);
     }
 
     public HiveCatalog(
             FileIO fileIO,
             HiveConf hiveConf,
             String clientClassName,
-            Map<String, String> options,
+            Options options,
             String warehouse) {
         super(fileIO, options);
         this.hiveConf = hiveConf;
@@ -158,6 +153,33 @@ public class HiveCatalog extends AbstractCatalog {
         } catch (TableNotExistException e) {
             throw new RuntimeException(
                     "Table " + identifier + " does not exist. This is unexpected.", e);
+        }
+    }
+
+    @Override
+    public Path getDataTableLocation(Identifier identifier) {
+        try {
+            String databaseName = identifier.getDatabaseName();
+            String tableName = identifier.getObjectName();
+            if (client.tableExists(databaseName, tableName)) {
+                String location =
+                        locationHelper.getTableLocation(client.getTable(databaseName, tableName));
+                if (location != null) {
+                    return new Path(location);
+                }
+            } else {
+                // If the table does not exist,
+                // we should use the database path to generate the table path.
+                String dbLocation =
+                        locationHelper.getDatabaseLocation(client.getDatabase(databaseName));
+                if (dbLocation != null) {
+                    return new Path(dbLocation, tableName);
+                }
+            }
+
+            return super.getDataTableLocation(identifier);
+        } catch (TException e) {
+            throw new RuntimeException("Can not get table " + identifier + " from metastore.", e);
         }
     }
 
@@ -280,8 +302,6 @@ public class HiveCatalog extends AbstractCatalog {
 
     @Override
     protected void createTableImpl(Identifier identifier, Schema schema) {
-        checkFieldNamesUpperCase(schema.rowType().getFieldNames());
-
         // first commit changes to underlying files
         // if changes on Hive fails there is no harm to perform the same changes to files again
         TableSchema tableSchema;
@@ -323,7 +343,6 @@ public class HiveCatalog extends AbstractCatalog {
     @Override
     protected void renameTableImpl(Identifier fromTable, Identifier toTable) {
         try {
-            checkIdentifierUpperCase(toTable);
             String fromDB = fromTable.getDatabaseName();
             String fromTableName = fromTable.getObjectName();
             Table table = client.getTable(fromDB, fromTableName);
@@ -358,7 +377,6 @@ public class HiveCatalog extends AbstractCatalog {
     @Override
     protected void alterTableImpl(Identifier identifier, List<SchemaChange> changes)
             throws TableNotExistException, ColumnAlreadyExistException, ColumnNotExistException {
-        checkFieldNamesUpperCaseInSchemaChange(changes);
 
         final SchemaManager schemaManager = schemaManager(identifier);
         // first commit changes to underlying files
@@ -401,34 +419,6 @@ public class HiveCatalog extends AbstractCatalog {
                 String.format(
                         "Table name[%s] cannot contain upper case in hive catalog",
                         identifier.getObjectName()));
-    }
-
-    private void checkFieldNamesUpperCaseInSchemaChange(List<SchemaChange> changes) {
-        List<String> fieldNames = new ArrayList<>();
-        for (SchemaChange change : changes) {
-            if (change instanceof SchemaChange.AddColumn) {
-                SchemaChange.AddColumn addColumn = (SchemaChange.AddColumn) change;
-                fieldNames.add(addColumn.fieldName());
-            } else if (change instanceof SchemaChange.RenameColumn) {
-                SchemaChange.RenameColumn rename = (SchemaChange.RenameColumn) change;
-                fieldNames.add(rename.newName());
-            } else {
-                // do nothing
-            }
-        }
-        checkFieldNamesUpperCase(fieldNames);
-    }
-
-    private void checkFieldNamesUpperCase(List<String> fieldNames) {
-        List<String> illegalFieldNames =
-                fieldNames.stream()
-                        .filter(f -> !f.equals(f.toLowerCase()))
-                        .collect(Collectors.toList());
-        checkState(
-                illegalFieldNames.isEmpty(),
-                String.format(
-                        "Field names %s cannot contain upper case in hive catalog",
-                        illegalFieldNames));
     }
 
     private Database convertToDatabase(String name) {
@@ -541,7 +531,6 @@ public class HiveCatalog extends AbstractCatalog {
     }
 
     private SchemaManager schemaManager(Identifier identifier) {
-        checkIdentifierUpperCase(identifier);
         return new SchemaManager(fileIO, getDataTableLocation(identifier))
                 .withLock(lock(identifier));
     }
@@ -556,58 +545,8 @@ public class HiveCatalog extends AbstractCatalog {
         return Lock.fromCatalog(lock, identifier);
     }
 
-    private static final List<Class<?>[]> GET_PROXY_PARAMS =
-            Arrays.asList(
-                    // for hive 2.x
-                    new Class<?>[] {
-                        HiveConf.class,
-                        HiveMetaHookLoader.class,
-                        ConcurrentHashMap.class,
-                        String.class,
-                        Boolean.TYPE
-                    },
-                    // for hive 3.x
-                    new Class<?>[] {
-                        Configuration.class,
-                        HiveMetaHookLoader.class,
-                        ConcurrentHashMap.class,
-                        String.class,
-                        Boolean.TYPE
-                    });
-
     static IMetaStoreClient createClient(HiveConf hiveConf, String clientClassName) {
-        Method getProxy = null;
-        RuntimeException methodNotFound =
-                new RuntimeException(
-                        "Failed to find desired getProxy method from RetryingMetaStoreClient");
-        for (Class<?>[] classes : GET_PROXY_PARAMS) {
-            try {
-                getProxy = RetryingMetaStoreClient.class.getMethod("getProxy", classes);
-            } catch (NoSuchMethodException e) {
-                methodNotFound.addSuppressed(e);
-            }
-        }
-        if (getProxy == null) {
-            throw methodNotFound;
-        }
-
-        IMetaStoreClient client;
-        try {
-            client =
-                    (IMetaStoreClient)
-                            getProxy.invoke(
-                                    null,
-                                    hiveConf,
-                                    (HiveMetaHookLoader) (tbl -> null),
-                                    new ConcurrentHashMap<>(),
-                                    clientClassName,
-                                    true);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return isNullOrWhitespaceOnly(hiveConf.get(HiveConf.ConfVars.METASTOREURIS.varname))
-                ? client
-                : HiveMetaStoreClient.newSynchronizedClient(client);
+        return new RetryingMetaStoreClientFactory().createClient(hiveConf, clientClassName);
     }
 
     public static HiveConf createHiveConf(

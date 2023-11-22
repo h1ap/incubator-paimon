@@ -21,8 +21,10 @@ package org.apache.paimon.table.source.snapshot;
 import org.apache.paimon.Snapshot;
 import org.apache.paimon.consumer.ConsumerManager;
 import org.apache.paimon.data.BinaryRow;
+import org.apache.paimon.metrics.MetricRegistry;
 import org.apache.paimon.predicate.Predicate;
 import org.apache.paimon.table.source.DataSplit;
+import org.apache.paimon.table.source.RawFile;
 import org.apache.paimon.table.source.ScanMode;
 import org.apache.paimon.table.source.Split;
 import org.apache.paimon.table.source.SplitGenerator;
@@ -33,6 +35,8 @@ import org.apache.paimon.utils.SnapshotManager;
 import javax.annotation.Nullable;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /** Read splits from specified {@link Snapshot} with given configuration. */
 public interface SnapshotReader {
@@ -49,6 +53,8 @@ public interface SnapshotReader {
 
     SnapshotReader withFilter(Predicate predicate);
 
+    SnapshotReader withPartitionFilter(Map<String, String> partitionSpec);
+
     SnapshotReader withMode(ScanMode scanMode);
 
     SnapshotReader withLevelFilter(Filter<Integer> levelFilter);
@@ -56,6 +62,8 @@ public interface SnapshotReader {
     SnapshotReader withBucket(int bucket);
 
     SnapshotReader withBucketFilter(Filter<Integer> bucketFilter);
+
+    SnapshotReader withMetricRegistry(MetricRegistry registry);
 
     /** Get splits plan from snapshot. */
     Plan read();
@@ -67,6 +75,12 @@ public interface SnapshotReader {
 
     /** Get partitions from a snapshot. */
     List<BinaryRow> partitions();
+
+    /**
+     * If all files in this split can be read without merging, returns an {@link Optional} wrapping
+     * a list of {@link RawFile}s, otherwise returns {@link Optional#empty()}.
+     */
+    Optional<List<RawFile>> convertToRawFiles(DataSplit split);
 
     /** Result plan of this scan. */
     interface Plan extends TableScan.Plan {

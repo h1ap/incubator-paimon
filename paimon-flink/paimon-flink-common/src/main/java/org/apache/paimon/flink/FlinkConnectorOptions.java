@@ -45,6 +45,7 @@ public class FlinkConnectorOptions {
 
     public static final String TABLE_DYNAMIC_OPTION_PREFIX = "paimon";
 
+    @ExcludeFromDocumentation("Confused without log system")
     public static final ConfigOption<String> LOG_SYSTEM =
             ConfigOptions.key("log.system")
                     .stringType()
@@ -70,6 +71,7 @@ public class FlinkConnectorOptions {
                                                             + "."))
                                     .build());
 
+    @ExcludeFromDocumentation("Confused without log system")
     public static final ConfigOption<Integer> LOG_SYSTEM_PARTITIONS =
             ConfigOptions.key("log.system.partitions")
                     .intType()
@@ -77,6 +79,7 @@ public class FlinkConnectorOptions {
                     .withDescription(
                             "The number of partitions of the log system. If log system is kafka, this is kafka partitions.");
 
+    @ExcludeFromDocumentation("Confused without log system")
     public static final ConfigOption<Integer> LOG_SYSTEM_REPLICATION =
             ConfigOptions.key("log.system.replication")
                     .intType()
@@ -119,6 +122,13 @@ public class FlinkConnectorOptions {
                     .withDescription(
                             "If it is false, parallelism of source are set by global parallelism."
                                     + " Otherwise, source parallelism is inferred from splits number (batch mode) or bucket number(streaming mode).");
+
+    public static final ConfigOption<Integer> INFER_SCAN_MAX_PARALLELISM =
+            ConfigOptions.key("scan.infer-parallelism.max")
+                    .intType()
+                    .defaultValue(1024)
+                    .withDescription(
+                            "If scan.infer-parallelism is true, limit the parallelism of source through this option.");
 
     @Deprecated
     @ExcludeFromDocumentation("Deprecated")

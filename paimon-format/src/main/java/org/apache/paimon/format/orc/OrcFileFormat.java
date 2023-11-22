@@ -42,7 +42,6 @@ import org.apache.paimon.types.IntType;
 import org.apache.paimon.types.MapType;
 import org.apache.paimon.types.MultisetType;
 import org.apache.paimon.types.RowType;
-import org.apache.paimon.utils.Projection;
 
 import org.apache.orc.TypeDescription;
 
@@ -97,7 +96,7 @@ public class OrcFileFormat extends FileFormat {
 
     @Override
     public FormatReaderFactory createReaderFactory(
-            RowType type, int[][] projection, @Nullable List<Predicate> filters) {
+            RowType projectedRowType, @Nullable List<Predicate> filters) {
         List<OrcFilters.Predicate> orcPredicates = new ArrayList<>();
 
         if (filters != null) {
@@ -110,8 +109,7 @@ public class OrcFileFormat extends FileFormat {
 
         return new OrcReaderFactory(
                 readerConf,
-                (RowType) refineDataType(type),
-                Projection.of(projection).toTopLevelIndexes(),
+                (RowType) refineDataType(projectedRowType),
                 orcPredicates,
                 formatContext.readBatchSize());
     }

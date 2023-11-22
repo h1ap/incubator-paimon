@@ -19,6 +19,7 @@
 package org.apache.paimon.flink.action.cdc.mysql;
 
 import org.apache.paimon.annotation.VisibleForTesting;
+import org.apache.paimon.catalog.AbstractCatalog;
 import org.apache.paimon.catalog.Catalog;
 import org.apache.paimon.catalog.Identifier;
 import org.apache.paimon.flink.action.Action;
@@ -32,6 +33,9 @@ import org.apache.paimon.flink.action.cdc.mysql.schema.MySqlSchemasInfo;
 import org.apache.paimon.flink.action.cdc.mysql.schema.MySqlTableInfo;
 import org.apache.paimon.flink.sink.cdc.EventParser;
 import org.apache.paimon.flink.sink.cdc.FlinkCdcSyncDatabaseSinkBuilder;
+import org.apache.paimon.flink.sink.cdc.NewTableSchemaBuilder;
+import org.apache.paimon.flink.sink.cdc.RichCdcMultiplexRecord;
+import org.apache.paimon.flink.sink.cdc.RichCdcMultiplexRecordEventParser;
 import org.apache.paimon.schema.Schema;
 import org.apache.paimon.schema.TableSchema;
 import org.apache.paimon.table.FileStoreTable;
@@ -46,7 +50,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,7 +58,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.apache.paimon.flink.action.MultiTablesSinkMode.DIVIDED;
 import static org.apache.paimon.flink.action.cdc.CdcActionCommonUtils.schemaCompatible;
@@ -128,6 +130,8 @@ public class MySqlSyncDatabaseAction extends ActionBase {
         super(warehouse, catalogConfig);
         this.database = database;
         this.mySqlConfig = Configuration.fromMap(mySqlConfig);
+
+        MySqlActionUtils.registerJdbcDriver();
     }
 
     public MySqlSyncDatabaseAction withTableConfig(Map<String, String> tableConfig) {
@@ -196,9 +200,7 @@ public class MySqlSyncDatabaseAction extends ActionBase {
                         + "use mysql-sync-table instead.");
         boolean caseSensitive = catalog.caseSensitive();
 
-        if (!caseSensitive) {
-            validateCaseInsensitive();
-        }
+        validateCaseInsensitive(caseSensitive);
 
         Pattern includingPattern = Pattern.compile(includingTables);
         Pattern excludingPattern =
@@ -225,15 +227,9 @@ public class MySqlSyncDatabaseAction extends ActionBase {
         TableNameConverter tableNameConverter =
                 new TableNameConverter(caseSensitive, mergeShards, tablePrefix, tableSuffix);
 
-        CdcMetadataConverter[] metadataConverters =
+        CdcMetadataConverter<?>[] metadataConverters =
                 metadataColumn.stream()
-                        .map(
-                                key ->
-                                        Stream.of(MySqlMetadataProcessor.values())
-                                                .filter(m -> m.getKey().equals(key))
-                                                .findFirst()
-                                                .orElseThrow(IllegalStateException::new))
-                        .map(MySqlMetadataProcessor::getConverter)
+                        .map(MySqlMetadataProcessor::converter)
                         .toArray(CdcMetadataConverter[]::new);
 
         List<FileStoreTable> fileStoreTables = new ArrayList<>();
@@ -249,7 +245,8 @@ public class MySqlSyncDatabaseAction extends ActionBase {
                             Collections.emptyList(),
                             tableConfig,
                             tableInfo.schema(),
-                            metadataConverters);
+                            metadataConverters,
+                            true);
             try {
                 table = (FileStoreTable) catalog.getTable(identifier);
                 table = table.copy(tableConfig);
@@ -284,28 +281,26 @@ public class MySqlSyncDatabaseAction extends ActionBase {
                                 monitoredTables,
                                 excludedTables));
 
-        String serverTimeZone = mySqlConfig.get(MySqlSourceOptions.SERVER_TIME_ZONE);
-        ZoneId zoneId = serverTimeZone == null ? ZoneId.systemDefault() : ZoneId.of(serverTimeZone);
-        TypeMapping typeMapping = this.typeMapping;
-        MySqlTableSchemaBuilder schemaBuilder =
-                new MySqlTableSchemaBuilder(tableConfig, caseSensitive, typeMapping);
+        NewTableSchemaBuilder schemaBuilder = new NewTableSchemaBuilder(tableConfig, caseSensitive);
 
-        EventParser.Factory<String> parserFactory =
+        TypeMapping typeMapping = this.typeMapping;
+        MySqlRecordParser recordParser =
+                new MySqlRecordParser(mySqlConfig, caseSensitive, typeMapping, metadataConverters);
+        EventParser.Factory<RichCdcMultiplexRecord> parserFactory =
                 () ->
-                        new MySqlDebeziumJsonEventParser(
-                                zoneId,
-                                caseSensitive,
-                                tableNameConverter,
+                        new RichCdcMultiplexRecordEventParser(
                                 schemaBuilder,
                                 includingPattern,
                                 excludingPattern,
-                                typeMapping,
-                                metadataConverters);
+                                tableNameConverter);
 
         String database = this.database;
         MultiTablesSinkMode mode = this.mode;
-        new FlinkCdcSyncDatabaseSinkBuilder<String>()
-                .withInput(env.fromSource(source, WatermarkStrategy.noWatermarks(), "MySQL Source"))
+        new FlinkCdcSyncDatabaseSinkBuilder<RichCdcMultiplexRecord>()
+                .withInput(
+                        env.fromSource(source, WatermarkStrategy.noWatermarks(), "MySQL Source")
+                                .flatMap(recordParser)
+                                .name("Parse"))
                 .withParserFactory(parserFactory)
                 .withDatabase(database)
                 .withCatalogLoader(catalogLoader())
@@ -315,22 +310,10 @@ public class MySqlSyncDatabaseAction extends ActionBase {
                 .build();
     }
 
-    private void validateCaseInsensitive() {
-        checkArgument(
-                database.equals(database.toLowerCase()),
-                String.format(
-                        "Database name [%s] cannot contain upper case in case-insensitive catalog.",
-                        database));
-        checkArgument(
-                tablePrefix.equals(tablePrefix.toLowerCase()),
-                String.format(
-                        "Table prefix [%s] cannot contain upper case in case-insensitive catalog.",
-                        tablePrefix));
-        checkArgument(
-                tableSuffix.equals(tableSuffix.toLowerCase()),
-                String.format(
-                        "Table suffix [%s] cannot contain upper case in case-insensitive catalog.",
-                        tableSuffix));
+    private void validateCaseInsensitive(boolean caseSensitive) {
+        AbstractCatalog.validateCaseInsensitive(caseSensitive, "Database", database);
+        AbstractCatalog.validateCaseInsensitive(caseSensitive, "Table prefix", tablePrefix);
+        AbstractCatalog.validateCaseInsensitive(caseSensitive, "Table suffix", tableSuffix);
     }
 
     private void logNonPkTables(List<Identifier> nonPkTables) {
@@ -406,6 +389,6 @@ public class MySqlSyncDatabaseAction extends ActionBase {
     @Override
     public void run() throws Exception {
         build();
-        execute(env, String.format("MySQL-Paimon Database Sync: %s", database));
+        execute(String.format("MySQL-Paimon Database Sync: %s", database));
     }
 }

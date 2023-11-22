@@ -62,6 +62,8 @@ public abstract class UpdatedDataFieldsProcessFunctionBase<I, O> extends Process
     private static final List<DataTypeRoot> FLOATING_POINT_TYPES =
             Arrays.asList(DataTypeRoot.FLOAT, DataTypeRoot.DOUBLE);
 
+    private static final List<DataTypeRoot> DECIMAL_TYPES = Arrays.asList(DataTypeRoot.DECIMAL);
+
     protected UpdatedDataFieldsProcessFunctionBase(Catalog.Loader catalogLoader) {
         this.catalogLoader = catalogLoader;
     }
@@ -114,8 +116,11 @@ public abstract class UpdatedDataFieldsProcessFunctionBase<I, O> extends Process
                 case EXCEPTION:
                     throw new UnsupportedOperationException(
                             String.format(
-                                    "Cannot convert field %s from type %s to %s",
-                                    updateColumnType.fieldName(), oldType, newType));
+                                    "Cannot convert field %s from type %s to %s of Paimon table %s.",
+                                    updateColumnType.fieldName(),
+                                    oldType,
+                                    newType,
+                                    identifier.getFullName()));
             }
         } else if (schemaChange instanceof SchemaChange.UpdateColumnComment) {
             catalog.alterTable(identifier, schemaChange, false);
@@ -159,6 +164,15 @@ public abstract class UpdatedDataFieldsProcessFunctionBase<I, O> extends Process
         newIdx = FLOATING_POINT_TYPES.indexOf(newType.getTypeRoot());
         if (oldIdx >= 0 && newIdx >= 0) {
             return oldIdx <= newIdx ? ConvertAction.CONVERT : ConvertAction.IGNORE;
+        }
+
+        oldIdx = DECIMAL_TYPES.indexOf(oldType.getTypeRoot());
+        newIdx = DECIMAL_TYPES.indexOf(newType.getTypeRoot());
+        if (oldIdx >= 0 && newIdx >= 0) {
+            return DataTypeChecks.getPrecision(newType) <= DataTypeChecks.getPrecision(oldType)
+                            && DataTypeChecks.getScale(newType) <= DataTypeChecks.getScale(oldType)
+                    ? ConvertAction.IGNORE
+                    : ConvertAction.CONVERT;
         }
 
         return ConvertAction.EXCEPTION;

@@ -43,7 +43,6 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,6 +53,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.apache.flink.streaming.connectors.kafka.table.KafkaConnectorOptions.SCAN_STARTUP_SPECIFIC_OFFSETS;
 import static org.apache.paimon.utils.Preconditions.checkArgument;
@@ -275,10 +275,14 @@ public class KafkaActionUtils {
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 
+        // the return may be null in older versions of the Kafka client
         List<PartitionInfo> partitionInfos = consumer.partitionsFor(topic);
-        if (partitionInfos.isEmpty()) {
+        if (partitionInfos == null || partitionInfos.isEmpty()) {
             throw new IllegalArgumentException(
-                    "Failed to find partition information for topic " + topic);
+                    String.format(
+                            "Failed to find partition information for topic '%s'. Please check your "
+                                    + "'topic' and 'bootstrap.servers' config.",
+                            topic));
         }
         int firstPartition =
                 partitionInfos.stream().map(PartitionInfo::partition).sorted().findFirst().get();
@@ -302,10 +306,9 @@ public class KafkaActionUtils {
         public List<String> getRecords(String topic, int pollTimeOutMills) {
             ConsumerRecords<String, String> consumerRecords =
                     consumer.poll(Duration.ofMillis(pollTimeOutMills));
-            Iterable<ConsumerRecord<String, String>> records = consumerRecords.records(topic);
-            List<String> result = new ArrayList<>();
-            records.forEach(r -> result.add(r.value()));
-            return result;
+            return StreamSupport.stream(consumerRecords.records(topic).spliterator(), false)
+                    .map(ConsumerRecord::value)
+                    .collect(Collectors.toList());
         }
 
         @Override

@@ -171,6 +171,36 @@ SELECT * FROM T; -- output 1, 2, 2, 2, 3, 3, 3
 
 For fields.<fieldName>.sequence-group, valid comparative data types include: DECIMAL, TINYINT, SMALLINT, INTEGER, BIGINT, FLOAT, DOUBLE, DATE, TIME, TIMESTAMP, and TIMESTAMP_LTZ.
 
+#### Aggregation
+
+You can specify aggregation function for the input field, all the functions in the [Aggregation]({{< ref "concepts/primary-key-table#aggregation-1" >}}) are supported. 
+
+See example:
+
+```sql
+CREATE TABLE T (
+          k INT,
+          a INT,
+          b INT,
+          c INT,
+          d INT,
+          PRIMARY KEY (k) NOT ENFORCED
+) WITH (
+     'merge-engine'='partial-update',
+     'fields.a.sequence-group' = 'b',
+     'fields.b.aggregate-function' = 'first_value',
+     'fields.c.sequence-group' = 'd',
+     'fields.d.aggregate-function' = 'sum'
+ );
+INSERT INTO T VALUES (1, 1, 1, CAST(NULL AS INT), CAST(NULL AS INT));
+INSERT INTO T VALUES (1, CAST(NULL AS INT), CAST(NULL AS INT), 1, 1);
+INSERT INTO T VALUES (1, 2, 2, CAST(NULL AS INT), CAST(NULL AS INT));
+INSERT INTO T VALUES (1, CAST(NULL AS INT), CAST(NULL AS INT), 2, 2);
+
+
+SELECT * FROM T; -- output 1, 2, 1, 2, 3
+```
+
 #### Default Value
 If the order of the data cannot be guaranteed and field is written only by overwriting null values,
 fields that have not been overwritten will be displayed as null when reading table.
@@ -185,8 +215,8 @@ CREATE TABLE T (
 ) WITH (
      'merge-engine'='partial-update'
      );
-INSERT INTO T VALUES (1, 1,null,null);
-INSERT INTO T VALUES (1, null,null,1);
+INSERT INTO T VALUES (1, 1, CAST(NULL AS INT), CAST(NULL AS INT));
+INSERT INTO T VALUES (1, CAST(NULL AS INT), CAST(NULL AS INT), 1);
 
 SELECT * FROM T; -- output 1, 1, null, 1
 ```
@@ -204,8 +234,8 @@ CREATE TABLE T (
     'fields.b.default-value'='0'
 );
 
-INSERT INTO T VALUES (1, 1,null,null);
-INSERT INTO T VALUES (1, null,null,1);
+INSERT INTO T VALUES (1, 1, CAST(NULL AS INT), CAST(NULL AS INT));
+INSERT INTO T VALUES (1, CAST(NULL AS INT), CAST(NULL AS INT), 1);
 
 SELECT * FROM T; -- output 1, 1, 0, 1
 ```
@@ -250,6 +280,7 @@ Current supported aggregate functions and data types are:
 * `last_value` / `last_non_null_value`: support all data types.
 * `listagg`: supports STRING data type.
 * `bool_and` / `bool_or`: support BOOLEAN data type.
+* `first_value` / `first_not_null_value`: support all data types.
 
 Only `sum` supports retraction (`UPDATE_BEFORE` and `DELETE`), others aggregate functions do not support retraction.
 If you allow some functions to ignore retraction messages, you can configure:
@@ -269,15 +300,18 @@ This is an experimental feature.
 By specifying `'merge-engine' = 'first-row'`, users can keep the first row of the same primary key. It differs from the
 `deduplicate` merge engine that in the `first-row` merge engine, it will generate insert only changelog. 
 
+{{< hint info >}}
 1. `first-row` merge engine must be used together with `lookup` [changelog producer]({{< ref "concepts/primary-key-table#changelog-producers" >}}).
 2. You can not specify `sequence.field`.
-3. Not accept `DELETE` and `UPDATE_BEFORE` message.
+3. Not accept `DELETE` and `UPDATE_BEFORE` message. You can config `first-row.ignore-delete` to ignore these two kinds records.
+{{< /hint >}}
+
 
 This is of great help in replacing log deduplication in streaming computation.
 
 ## Changelog Producers
 
-Streaming queries will continuously produce the latest changes. These changes can come from the underlying table files or from an [external log system]({{< ref "concepts/external-log-systems" >}}) like Kafka. Compared to the external log system, changes from table files have lower cost but higher latency (depending on how often snapshots are created).
+Streaming queries will continuously produce the latest changes.
 
 By specifying the `changelog-producer` table property when creating the table, users can choose the pattern of changes produced from table files.
 

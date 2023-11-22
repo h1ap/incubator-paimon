@@ -28,17 +28,23 @@ import org.apache.paimon.data.BinaryRow;
 import org.apache.paimon.io.DataFileMeta;
 import org.apache.paimon.manifest.FileKind;
 import org.apache.paimon.manifest.ManifestEntry;
+import org.apache.paimon.metrics.MetricRegistry;
 import org.apache.paimon.operation.DefaultValueAssigner;
 import org.apache.paimon.operation.FileStoreScan;
+import org.apache.paimon.operation.metrics.ScanMetrics;
 import org.apache.paimon.predicate.Predicate;
 import org.apache.paimon.predicate.PredicateBuilder;
 import org.apache.paimon.schema.TableSchema;
 import org.apache.paimon.table.source.DataSplit;
+import org.apache.paimon.table.source.RawFile;
 import org.apache.paimon.table.source.ScanMode;
 import org.apache.paimon.table.source.Split;
 import org.apache.paimon.table.source.SplitGenerator;
+import org.apache.paimon.types.RowType;
+import org.apache.paimon.utils.FileStorePathFactory;
 import org.apache.paimon.utils.Filter;
 import org.apache.paimon.utils.SnapshotManager;
+import org.apache.paimon.utils.TypeUtils;
 
 import javax.annotation.Nullable;
 
@@ -68,9 +74,12 @@ public class SnapshotReaderImpl implements SnapshotReader {
     private final SplitGenerator splitGenerator;
     private final BiConsumer<FileStoreScan, Predicate> nonPartitionFilterConsumer;
     private final DefaultValueAssigner defaultValueAssigner;
+    private final FileStorePathFactory pathFactory;
 
     private ScanMode scanMode = ScanMode.ALL;
     private RecordComparator lazyPartitionComparator;
+
+    private final String tableName;
 
     public SnapshotReaderImpl(
             FileStoreScan scan,
@@ -79,7 +88,9 @@ public class SnapshotReaderImpl implements SnapshotReader {
             SnapshotManager snapshotManager,
             SplitGenerator splitGenerator,
             BiConsumer<FileStoreScan, Predicate> nonPartitionFilterConsumer,
-            DefaultValueAssigner defaultValueAssigner) {
+            DefaultValueAssigner defaultValueAssigner,
+            FileStorePathFactory pathFactory,
+            String tableName) {
         this.scan = scan;
         this.tableSchema = tableSchema;
         this.options = options;
@@ -89,6 +100,9 @@ public class SnapshotReaderImpl implements SnapshotReader {
         this.splitGenerator = splitGenerator;
         this.nonPartitionFilterConsumer = nonPartitionFilterConsumer;
         this.defaultValueAssigner = defaultValueAssigner;
+        this.pathFactory = pathFactory;
+
+        this.tableName = tableName;
     }
 
     @Override
@@ -115,6 +129,30 @@ public class SnapshotReaderImpl implements SnapshotReader {
     @Override
     public SnapshotReader withSnapshot(Snapshot snapshot) {
         scan.withSnapshot(snapshot);
+        return this;
+    }
+
+    @Override
+    public SnapshotReader withPartitionFilter(Map<String, String> partitionSpec) {
+        if (partitionSpec != null) {
+            List<String> partitionKeys = tableSchema.partitionKeys();
+            RowType rowType = tableSchema.logicalPartitionType();
+            PredicateBuilder predicateBuilder = new PredicateBuilder(rowType);
+            List<Predicate> partitionFilters =
+                    partitionSpec.entrySet().stream()
+                            .map(
+                                    m -> {
+                                        int index = partitionKeys.indexOf(m.getKey());
+                                        Object value =
+                                                TypeUtils.castFromStringInternal(
+                                                        m.getValue(),
+                                                        rowType.getTypeAt(index),
+                                                        false);
+                                        return predicateBuilder.equal(index, value);
+                                    })
+                            .collect(Collectors.toList());
+            scan.withPartitionFilter(PredicateBuilder.and(partitionFilters));
+        }
         return this;
     }
 
@@ -170,6 +208,12 @@ public class SnapshotReaderImpl implements SnapshotReader {
     @Override
     public SnapshotReader withBucketFilter(Filter<Integer> bucketFilter) {
         scan.withBucketFilter(bucketFilter);
+        return this;
+    }
+
+    @Override
+    public SnapshotReader withMetricRegistry(MetricRegistry registry) {
+        scan.withMetrics(new ScanMetrics(registry, tableName));
         return this;
     }
 
@@ -229,6 +273,47 @@ public class SnapshotReaderImpl implements SnapshotReader {
                 .map(Optional::get)
                 .map(ManifestEntry::partition)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<List<RawFile>> convertToRawFiles(DataSplit split) {
+        String bucketPath = pathFactory.bucketPath(split.partition(), split.bucket()).toString();
+        List<DataFileMeta> dataFiles = split.dataFiles();
+
+        // bucket with only one file can be returned
+        if (dataFiles.size() == 1) {
+            return Optional.of(
+                    Collections.singletonList(makeRawTableFile(bucketPath, dataFiles.get(0))));
+        }
+
+        // append only files can be returned
+        if (tableSchema.primaryKeys().isEmpty()) {
+            return Optional.of(makeRawTableFiles(bucketPath, dataFiles));
+        }
+
+        // bucket containing only one level (except level 0) can be returned
+        Set<Integer> levels =
+                dataFiles.stream().map(DataFileMeta::level).collect(Collectors.toSet());
+        if (levels.size() == 1 && !levels.contains(0)) {
+            return Optional.of(makeRawTableFiles(bucketPath, dataFiles));
+        }
+
+        return Optional.empty();
+    }
+
+    private List<RawFile> makeRawTableFiles(String bucketPath, List<DataFileMeta> dataFiles) {
+        return dataFiles.stream()
+                .map(f -> makeRawTableFile(bucketPath, f))
+                .collect(Collectors.toList());
+    }
+
+    private RawFile makeRawTableFile(String bucketPath, DataFileMeta meta) {
+        return new RawFile(
+                bucketPath + "/" + meta.fileName(),
+                0,
+                meta.fileSize(),
+                new CoreOptions(tableSchema.options()).formatType().toString().toLowerCase(),
+                meta.schemaId());
     }
 
     @Override

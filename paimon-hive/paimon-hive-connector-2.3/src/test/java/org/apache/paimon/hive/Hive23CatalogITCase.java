@@ -21,6 +21,7 @@ package org.apache.paimon.hive;
 import org.apache.paimon.fs.local.LocalFileIO;
 import org.apache.paimon.hive.runner.PaimonEmbeddedHiveRunner;
 import org.apache.paimon.schema.SchemaManager;
+import org.apache.paimon.testutils.assertj.AssertionUtils;
 
 import com.klarna.hiverunner.annotations.HiveRunnerSetup;
 import com.klarna.hiverunner.config.HiveRunnerConfig;
@@ -70,6 +71,7 @@ public class Hive23CatalogITCase extends HiveCatalogITCaseBase {
                                 "  'type' = 'paimon',",
                                 "  'metastore' = 'hive',",
                                 "  'uri' = '',",
+                                "  'default-database' = 'test_db',",
                                 "  'warehouse' = '" + path + "',",
                                 "  'metastore.client.class' = '"
                                         + TestHiveMetaStoreClient.class.getName()
@@ -94,6 +96,7 @@ public class Hive23CatalogITCase extends HiveCatalogITCaseBase {
                         "  'type' = 'paimon',",
                         "  'metastore' = 'hive',",
                         "  'uri' = '',",
+                        "  'default-database' = 'test_db',",
                         "  'warehouse' = '" + path + "',",
                         "  'metastore.client.class' = '"
                                 + CreateFailHiveMetaStoreClient.class.getName()
@@ -107,12 +110,12 @@ public class Hive23CatalogITCase extends HiveCatalogITCaseBase {
                                         .await())
                 .isInstanceOf(TableException.class)
                 .hasMessage(
-                        "Could not execute CreateTable in path `my_hive_custom_client`.`default`.`hive_table`");
+                        "Could not execute CreateTable in path `my_hive_custom_client`.`test_db`.`hive_table`");
         assertThat(
                         new SchemaManager(
                                         LocalFileIO.create(),
                                         new org.apache.paimon.fs.Path(
-                                                path, "default.db/hive_table"))
+                                                path, "test_db.db/hive_table"))
                                 .listAllIds())
                 .isEmpty();
     }
@@ -126,6 +129,7 @@ public class Hive23CatalogITCase extends HiveCatalogITCaseBase {
                                 "  'type' = 'paimon',",
                                 "  'metastore' = 'hive',",
                                 "  'uri' = '',",
+                                "  'default-database' = 'test_db',",
                                 "  'warehouse' = '" + path + "',",
                                 "  'metastore.client.class' = '"
                                         + AlterFailHiveMetaStoreClient.class.getName()
@@ -136,17 +140,16 @@ public class Hive23CatalogITCase extends HiveCatalogITCaseBase {
         tEnv.executeSql("CREATE TABLE alter_failed_table(a INT, b STRING)").await();
 
         assertThatThrownBy(() -> tEnv.executeSql("ALTER TABLE alter_failed_table SET ('aa'='bb')"))
-                .isInstanceOf(TableException.class)
-                .hasMessage(
-                        "Could not execute "
-                                + "ALTER TABLE my_alter_hive.default.alter_failed_table\n"
-                                + "  SET 'aa' = 'bb'");
+                .satisfies(
+                        AssertionUtils.anyCauseMatches(
+                                TableException.class,
+                                "Could not execute AlterTable in path `my_alter_hive`.`test_db`.`alter_failed_table`"));
 
         assertThat(
                         new SchemaManager(
                                         LocalFileIO.create(),
                                         new org.apache.paimon.fs.Path(
-                                                path, "default.db/alter_failed_table"))
+                                                path, "test_db.db/alter_failed_table"))
                                 .latest()
                                 .get()
                                 .options())

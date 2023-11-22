@@ -32,8 +32,8 @@ under the License.
     <name>Paimon : Format</name>
 
     <properties>
-        <parquet.version>1.12.3</parquet.version>
-        <orc.version>1.5.6</orc.version>
+        <parquet.version>1.13.1</parquet.version>
+        <orc.version>1.8.3</orc.version>
         <joda-time.version>2.5</joda-time.version>
         <commons.pool.version>1.6</commons.pool.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
@@ -76,6 +76,10 @@ under the License.
                     <groupId>jdk.tools</groupId>
                     <artifactId>jdk.tools</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -110,7 +114,6 @@ under the License.
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons.lang3.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Orc End -->
@@ -137,12 +140,6 @@ under the License.
         <!-- Avro End -->
 
         <!-- Parquet Start -->
-
-        <dependency>
-            <groupId>org.apache.parquet</groupId>
-            <artifactId>parquet-avro</artifactId>
-            <version>${parquet.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.parquet</groupId>
@@ -279,7 +276,9 @@ under the License.
                                     <include>org.apache.hive:hive-storage-api</include>
                                     <include>io.airlift:aircompressor</include>
                                     <include>commons-lang:commons-lang</include>
+                                    <include>org.apache.commons:commons-lang3</include>
                                     <include>com.google.protobuf:protobuf-java</include>
+                                    <include>org.threeten:threeten-extra</include>
 
                                     <!-- Avro -->
                                     <include>org.apache.avro:avro</include>
@@ -289,7 +288,6 @@ under the License.
                                     <include>org.apache.commons:commons-compress</include>
 
                                     <!-- Parquet -->
-                                    <include>org.apache.parquet:parquet-avro</include>
                                     <include>org.apache.parquet:parquet-hadoop</include>
                                     <include>org.apache.parquet:parquet-format</include>
                                     <include>org.apache.parquet:parquet-column</include>
@@ -333,6 +331,10 @@ under the License.
                                 <relocation>
                                     <pattern>com.google.protobuf</pattern>
                                     <shadedPattern>org.apache.paimon.shade.com.google.protobuf</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.threeten.extra</pattern>
+                                    <shadedPattern>org.apache.paimon.shade.org.threeten.extra</shadedPattern>
                                 </relocation>
 
                                 <!-- Relocate Avro. -->

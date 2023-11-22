@@ -43,7 +43,7 @@ Paimon batch reads with time travel can specify a snapshot or a tag and read the
 
 {{< tabs "time-travel-example" >}}
 
-{{< tab "Flink" >}}
+{{< tab "Flink (dynamic option)" >}}
 ```sql
 -- read the snapshot with id 1L
 SELECT * FROM t /*+ OPTIONS('scan.snapshot-id' = '1') */;
@@ -53,6 +53,17 @@ SELECT * FROM t /*+ OPTIONS('scan.timestamp-millis' = '1678883047356') */;
 
 -- read tag 'my-tag'
 SELECT * FROM t /*+ OPTIONS('scan.tag-name' = 'my-tag') */;
+```
+{{< /tab >}}
+
+{{< tab "Flink 1.18+" >}}
+Flink SQL supports time travel syntax after 1.18.
+```sql
+-- read the snapshot from specified timestamp
+SELECT * FROM t FOR SYSTEM_TIME AS OF TIMESTAMP '2023-01-01 00:00:00';
+
+-- you can also use some simple expressions (see flink document to get supported functions)
+SELECT * FROM t FOR SYSTEM_TIME AS OF TIMESTAMP '2023-01-01 00:00:00' + INTERVAL '1' DAY
 ```
 {{< /tab >}}
 
@@ -134,6 +145,12 @@ Hive requires adding the following configuration parameters to the hive-site.xml
 ```
 
 ```sql
+-- read the snapshot with id 1L (use snapshot id as version)
+SET paimon.scan.snapshot-id=1
+SELECT * FROM t;
+SET paimon.scan.snapshot-id=null;
+
+-- read the snapshot from specified timestamp in unix seconds
 SET paimon.scan.timestamp-millis=1679486589444;
 SELECT * FROM t;
 SET paimon.scan.timestamp-millis=null;
@@ -175,7 +192,6 @@ Paimon supports that use Spark SQL to do the incremental query that implemented 
 To enable this needs these configs below:
 
 ```text
---conf spark.sql.catalog.spark_catalog=org.apache.paimon.spark.SparkGenericCatalog
 --conf spark.sql.extensions=org.apache.paimon.spark.extensions.PaimonSparkSessionExtensions
 ```
 
@@ -268,7 +284,7 @@ SELECT * FROM t WHERE dt > '2023-06-26';
 If it's not a partitioned table, or you can't filter by partition, you can use Time travel's stream read.
 
 {{< tabs "streaming-time-travel" >}}
-{{< tab "Flink" >}}
+{{< tab "Flink (dynamic option)" >}}
 ```sql
 -- read changes from snapshot id 1L 
 SELECT * FROM t /*+ OPTIONS('scan.snapshot-id' = '1') */;
@@ -280,6 +296,18 @@ SELECT * FROM t /*+ OPTIONS('scan.timestamp-millis' = '1678883047356') */;
 SELECT * FROM t /*+ OPTIONS('scan.mode'='from-snapshot-full','scan.snapshot-id' = '1') */;
 ```
 {{< /tab >}}
+
+{{< tab "Flink 1.18+" >}}
+Flink SQL supports time travel syntax after 1.18.
+```sql
+-- read the snapshot from specified timestamp
+SELECT * FROM t FOR SYSTEM_TIME AS OF TIMESTAMP '2023-01-01 00:00:00';
+
+-- you can also use some simple expressions (see flink document to get supported functions)
+SELECT * FROM t FOR SYSTEM_TIME AS OF TIMESTAMP '2023-01-01 00:00:00' + INTERVAL '1' DAY
+```
+{{< /tab >}}
+
 {{< /tabs >}}
 
 ### Consumer ID
@@ -301,6 +329,18 @@ When stream read Paimon tables, the next snapshot id to be recorded into the fil
 {{< hint info >}}
 NOTE: The consumer will prevent expiration of the snapshot. You can specify 'consumer.expiration-time' to manage the 
 lifetime of consumers.
+{{< /hint >}}
+
+By default, the consumer uses `exactly-once` mode to record consumption progress, which strictly ensures that what is 
+recorded in the consumer is the snapshot-id + 1 that all readers have exactly consumed. You can set `consumer.mode` to 
+`at-least-once` to allow readers consume snapshots at different rates and record the slowest snapshot-id among all 
+readers into the consumer. This mode can provide more capabilities, such as watermark alignment.
+
+{{< hint warning >}}
+1. When there is no watermark definition, the consumer in `at-least-once` mode cannot provide the ability to pass the 
+watermark in the snapshot to the downstream. 
+2. Since the implementation of `exactly-once` mode and `at-least-once` mode are completely different, the state of 
+flink is incompatible and cannot be restored from the state when switching modes.
 {{< /hint >}}
 
 You can reset a consumer with a given consumer ID and next snapshot ID and delete a consumer with a given consumer ID.
@@ -344,7 +384,7 @@ commits of `OVERWRITE`, you can configure `streaming-read-overwrite`.
 {{< tab "Flink" >}}
 
 By default, the parallelism of batch reads is the same as the number of splits, while the parallelism of stream 
-reads is the same as the number of buckets.
+reads is the same as the number of buckets, but not greater than `scan.infer-parallelism.max`.
 
 Disable `scan.infer-parallelism`, global parallelism will be used for reads.
 
@@ -365,6 +405,12 @@ You can also manually specify the parallelism from `scan.parallelism`.
             <td style="word-wrap: break-word;">true</td>
             <td>Boolean</td>
             <td>If it is false, parallelism of source are set by global parallelism. Otherwise, source parallelism is inferred from splits number (batch mode) or bucket number(streaming mode).</td>
+        </tr>
+         <tr>
+            <td><h5>scan.infer-parallelism.max</h5></td>
+            <td style="word-wrap: break-word;">1024</td>
+            <td>Integer</td>
+            <td>If scan.infer-parallelism is true, limit the parallelism of source through this option.</td>
         </tr>
         <tr>
             <td><h5>scan.parallelism</h5></td>

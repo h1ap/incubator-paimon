@@ -27,6 +27,7 @@ import org.apache.paimon.data.InternalRow;
 import org.apache.paimon.disk.IOManager;
 import org.apache.paimon.fs.FileIO;
 import org.apache.paimon.fs.Path;
+import org.apache.paimon.metrics.MetricRegistry;
 import org.apache.paimon.predicate.LeafPredicate;
 import org.apache.paimon.predicate.Predicate;
 import org.apache.paimon.predicate.PredicateBuilder;
@@ -36,9 +37,11 @@ import org.apache.paimon.table.DataTable;
 import org.apache.paimon.table.FileStoreTable;
 import org.apache.paimon.table.ReadonlyTable;
 import org.apache.paimon.table.Table;
+import org.apache.paimon.table.source.DataSplit;
 import org.apache.paimon.table.source.InnerStreamTableScan;
 import org.apache.paimon.table.source.InnerTableRead;
 import org.apache.paimon.table.source.InnerTableScan;
+import org.apache.paimon.table.source.RawFile;
 import org.apache.paimon.table.source.ScanMode;
 import org.apache.paimon.table.source.Split;
 import org.apache.paimon.table.source.SplitGenerator;
@@ -226,6 +229,12 @@ public class AuditLogTable implements DataTable, ReadonlyTable {
             return this;
         }
 
+        @Override
+        public SnapshotReader withPartitionFilter(Map<String, String> partitionSpec) {
+            snapshotReader.withPartitionFilter(partitionSpec);
+            return this;
+        }
+
         public SnapshotReader withMode(ScanMode scanMode) {
             snapshotReader.withMode(scanMode);
             return this;
@@ -248,6 +257,12 @@ public class AuditLogTable implements DataTable, ReadonlyTable {
         }
 
         @Override
+        public SnapshotReader withMetricRegistry(MetricRegistry registry) {
+            snapshotReader.withMetricRegistry(registry);
+            return this;
+        }
+
+        @Override
         public Plan read() {
             return snapshotReader.read();
         }
@@ -266,6 +281,13 @@ public class AuditLogTable implements DataTable, ReadonlyTable {
         public List<BinaryRow> partitions() {
             return snapshotReader.partitions();
         }
+
+        @Override
+        public Optional<List<RawFile>> convertToRawFiles(DataSplit split) {
+            // we can't return snapshotReader.convertToRawFiles(split),
+            // because AuditLogTable must use its special reader
+            return Optional.empty();
+        }
     }
 
     private class AuditLogBatchScan implements InnerTableScan {
@@ -279,6 +301,12 @@ public class AuditLogTable implements DataTable, ReadonlyTable {
         @Override
         public InnerTableScan withFilter(Predicate predicate) {
             convert(predicate).ifPresent(batchScan::withFilter);
+            return this;
+        }
+
+        @Override
+        public InnerTableScan withMetricsRegistry(MetricRegistry metricsRegistry) {
+            batchScan.withMetricsRegistry(metricsRegistry);
             return this;
         }
 
@@ -347,6 +375,12 @@ public class AuditLogTable implements DataTable, ReadonlyTable {
         @Override
         public void notifyCheckpointComplete(@Nullable Long nextSnapshot) {
             streamScan.notifyCheckpointComplete(nextSnapshot);
+        }
+
+        @Override
+        public InnerStreamTableScan withMetricsRegistry(MetricRegistry metricsRegistry) {
+            streamScan.withMetricsRegistry(metricsRegistry);
+            return this;
         }
     }
 
