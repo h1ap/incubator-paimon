@@ -354,7 +354,7 @@ public class CdcRecordStoreMultiWriteOperatorTest {
 
     private Options createCatalogOptions(Path warehouse) {
         Options conf = new Options();
-        conf.set(CatalogOptions.WAREHOUSE, warehouse.getPath());
+        conf.set(CatalogOptions.WAREHOUSE, warehouse.toString());
         conf.set(CatalogOptions.URI, "");
 
         return conf;
@@ -707,7 +707,7 @@ public class CdcRecordStoreMultiWriteOperatorTest {
         CdcRecordStoreMultiWriteOperator operator =
                 new CdcRecordStoreMultiWriteOperator(
                         catalogLoader,
-                        (t, commitUser, state, ioManager, memoryPoolFactory) ->
+                        (t, commitUser, state, ioManager, memoryPoolFactory, metricGroup) ->
                                 new StoreSinkWriteImpl(
                                         t,
                                         commitUser,
@@ -716,7 +716,8 @@ public class CdcRecordStoreMultiWriteOperatorTest {
                                         false,
                                         false,
                                         true,
-                                        memoryPoolFactory),
+                                        memoryPoolFactory,
+                                        metricGroup),
                         commitUser,
                         Options.fromMap(new HashMap<>()),
                         new HashMap<>());
