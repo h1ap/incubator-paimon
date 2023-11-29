@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -208,8 +209,13 @@ public class HiveCatalog extends AbstractCatalog {
     @Override
     protected void createDatabaseImpl(String name) {
         try {
-            client.createDatabase(convertToDatabase(name));
-            locationHelper.createPathIfRequired(databasePath(name), fileIO);
+            Path databasePath = newDatabasePath(name);
+            locationHelper.createPathIfRequired(databasePath, fileIO);
+
+            Database database = new Database();
+            database.setName(name);
+            locationHelper.specifyDatabaseLocation(databasePath, database);
+            client.createDatabase(database);
         } catch (TException | IOException e) {
             throw new RuntimeException("Failed to create database " + name, e);
         }
@@ -218,7 +224,9 @@ public class HiveCatalog extends AbstractCatalog {
     @Override
     protected void dropDatabaseImpl(String name) {
         try {
-            locationHelper.dropPathIfRequired(databasePath(name), fileIO);
+            Database database = client.getDatabase(name);
+            String location = locationHelper.getDatabaseLocation(database);
+            locationHelper.dropPathIfRequired(new Path(location), fileIO);
             client.dropDatabase(name, true, false, true);
         } catch (TException | IOException e) {
             throw new RuntimeException("Failed to drop database " + name, e);
@@ -421,13 +429,6 @@ public class HiveCatalog extends AbstractCatalog {
                         identifier.getObjectName()));
     }
 
-    private Database convertToDatabase(String name) {
-        Database database = new Database();
-        database.setName(name);
-        locationHelper.specifyDatabaseLocation(databasePath(name), database);
-        return database;
-    }
-
     private Table newHmsTable(Identifier identifier, Map<String, String> tableParameters) {
         long currentTimeMillis = System.currentTimeMillis();
         TableType tableType =
@@ -515,7 +516,7 @@ public class HiveCatalog extends AbstractCatalog {
     }
 
     @VisibleForTesting
-    IMetaStoreClient getHmsClient() {
+    public IMetaStoreClient getHmsClient() {
         return client;
     }
 
@@ -585,7 +586,6 @@ public class HiveCatalog extends AbstractCatalog {
             HiveConf.setLoadMetastoreConfig(false);
             HiveConf.setLoadHiveServer2Config(false);
             HiveConf hiveConf = new HiveConf(hadoopConf, HiveConf.class);
-
             org.apache.hadoop.fs.Path hiveSite =
                     new org.apache.hadoop.fs.Path(hiveConfDir, HIVE_SITE_FILE);
             if (!hiveSite.toUri().isAbsolute()) {
@@ -603,7 +603,15 @@ public class HiveCatalog extends AbstractCatalog {
 
             return hiveConf;
         } else {
-            return new HiveConf(hadoopConf, HiveConf.class);
+            HiveConf hiveConf = new HiveConf(hadoopConf, HiveConf.class);
+            // user doesn't provide hive conf dir, we try to find it in classpath
+            URL hiveSite =
+                    Thread.currentThread().getContextClassLoader().getResource(HIVE_SITE_FILE);
+            if (hiveSite != null) {
+                LOG.info("Found {} in classpath: {}", HIVE_SITE_FILE, hiveSite);
+                hiveConf.addResource(hiveSite);
+            }
+            return hiveConf;
         }
     }
 
